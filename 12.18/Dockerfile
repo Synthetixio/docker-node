@@ -20,6 +20,6 @@ ENV PATH $PATH:${HOME}/.npm-global/bin
 ENV npm_config_loglevel warn
 
 # install latest npm, regardless of node version, for speed and fixes
-RUN npm i npm@latest -g
+RUN npm i npm@6.14.8 -g
 
 WORKDIR ${HOME}/project
