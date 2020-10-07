@@ -13,8 +13,11 @@ ENV DEBCONF_NONINTERACTIVE_SEEN true
 # set npm path for global modules
 ENV NPM_CONFIG_PREFIX ${HOME}/.npm-global
 
-# add npm global packages to path
-ENV PATH $PATH:${HOME}/.npm-global/bin
+# create local bin dir
+RUN mkdir ${HOME}/bin
+
+# add npm global packages & local bin dir to path
+ENV PATH $PATH:${HOME}/.npm-global/bin:${HOME}/bin
 
 # avoid million NPM install messages
 ENV npm_config_loglevel warn
