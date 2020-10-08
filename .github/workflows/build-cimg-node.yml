@@ -51,6 +51,7 @@ jobs:
           tags: |
             ghcr.io/synthetixio/${{ github.event.repository.name }}/base:${{ matrix.node }}
             ghcr.io/synthetixio/${{ github.event.repository.name }}/cimg:${{ matrix.node }}
+            synthetixio/${{ github.event.repository.name }}:${{ matrix.node }}-cimg
 
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
