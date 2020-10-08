@@ -49,6 +49,7 @@ jobs:
           platforms: linux/amd64
           push: true
           tags: |
+            ghcr.io/synthetixio/${{ github.event.repository.name }}/base:${{ matrix.node }}
             ghcr.io/synthetixio/${{ github.event.repository.name }}/cimg:${{ matrix.node }}
 
           cache-from: type=local,src=/tmp/.buildx-cache
