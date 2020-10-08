@@ -1,4 +1,4 @@
-name: Docker Image CI
+name: Docker Image (cimg/node) CI
 
 on:
   push:
@@ -8,7 +8,7 @@ jobs:
   build_and_push:
     strategy:
       matrix:
-        node: [10.22, 12.18, 14.13]
+        node: [10.22, 12.19, 14.13]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -24,9 +24,9 @@ jobs:
         uses: actions/cache@v2
         with:
           path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-${{ matrix.node }}-buildx-${{ github.sha }}
+          key: cimg-${{ runner.os }}-${{ matrix.node }}-buildx-${{ github.sha }}
           restore-keys: |
-            ${{ runner.os }}-${{ matrix.node }}-buildx-
+            cimg-${{ runner.os }}-${{ matrix.node }}-buildx-
 
       - name: Login to DockerHub
         uses: docker/login-action@v1
@@ -45,11 +45,11 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: .
-          file: ./${{ matrix.node }}/Dockerfile
+          file: ./cimg/${{ matrix.node }}/Dockerfile
           platforms: linux/amd64
           push: true
           tags: |
-            ghcr.io/synthetixio/${{ github.event.repository.name }}/base:${{ matrix.node }}
+            ghcr.io/synthetixio/${{ github.event.repository.name }}/cimg:${{ matrix.node }}
 
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache

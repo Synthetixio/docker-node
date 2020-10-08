@@ -1,4 +1,4 @@
-FROM %%IMG%%:%%TAG%%@%%SHA%%
+FROM cimg/node:12.19@sha256:d68557a8c20fbde71451e5394b6963fc9ad70a9a58faa104393908ca2c7ca75c
 
 # home folder
 ENV HOME /home/circleci
@@ -23,6 +23,6 @@ ENV PATH $PATH:${HOME}/.npm-global/bin:${HOME}/bin
 ENV npm_config_loglevel warn
 
 # install latest npm, regardless of node version, for speed and fixes
-RUN npm i npm@%%NPM_VERSION%% -g
+RUN npm i npm@6.14.8 -g
 
 WORKDIR ${HOME}/project
