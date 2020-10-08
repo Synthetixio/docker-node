@@ -9,6 +9,7 @@ jobs:
     strategy:
       matrix:
         node: [10.22, 12.19, 14.13]
+        distro: [alpine, buster-slim, focal]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -24,9 +25,9 @@ jobs:
         uses: actions/cache@v2
         with:
           path: /tmp/.buildx-cache
-          key: node-${{ runner.os }}-${{ matrix.node }}-buildx-${{ github.sha }}
+          key: node-${{ runner.os }}-${{ matrix.node }}-${{ matrix.distro }}-buildx-${{ github.sha }}
           restore-keys: |
-            node-${{ runner.os }}-${{ matrix.node }}-buildx-
+            node-${{ runner.os }}-${{ matrix.node }}-${{ matrix.distro }}-buildx-
 
       - name: Login to DockerHub
         uses: docker/login-action@v1
@@ -41,41 +42,15 @@ jobs:
           username: synthetixio
           password: ${{ secrets.GH_PACKAGES_READ_WRITE }}
 
-      - name: Build and push (alpine)
+      - name: Build and push (${{ matrix.distro }}[${{ matrix.node }}])
         uses: docker/build-push-action@v2
         with:
           context: .
-          file: ./node/alpine/${{ matrix.node }}/Dockerfile
+          file: ./node/${{ matrix.distro }}/${{ matrix.node }}/Dockerfile
           platforms: linux/amd64
           push: true
           tags: |
-            ghcr.io/synthetixio/${{ github.event.repository.name }}/alpine:${{ matrix.node }}
-
-          cache-from: type=local,src=/tmp/.buildx-cache
-          cache-to: type=local,dest=/tmp/.buildx-cache
-
-      - name: Build and push (buster-slim)
-        uses: docker/build-push-action@v2
-        with:
-          context: .
-          file: ./node/buster-slim/${{ matrix.node }}/Dockerfile
-          platforms: linux/amd64
-          push: true
-          tags: |
-            ghcr.io/synthetixio/${{ github.event.repository.name }}/buster-slim:${{ matrix.node }}
-
-          cache-from: type=local,src=/tmp/.buildx-cache
-          cache-to: type=local,dest=/tmp/.buildx-cache
-
-      - name: Build and push (focal)
-        uses: docker/build-push-action@v2
-        with:
-          context: .
-          file: ./node/focal/${{ matrix.node }}/Dockerfile
-          platforms: linux/amd64
-          push: true
-          tags: |
-            ghcr.io/synthetixio/${{ github.event.repository.name }}/focal:${{ matrix.node }}
+            ghcr.io/synthetixio/${{ github.event.repository.name }}/${{ matrix.distro }}:${{ matrix.node }}
 
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
