@@ -1,4 +1,4 @@
-name: Docker Image (_/node) CI
+name: Docker Image (library/node) CI
 
 on:
   push:
