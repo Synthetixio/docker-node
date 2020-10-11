@@ -3,6 +3,11 @@ name: Docker Image (library/node) CI
 on:
   push:
     branches: [ master ]
+    paths:
+      - 'node/**'
+      - '.github/**'
+      - versions.json
+      - docker-entrypoint.sh
 
 jobs:
   build_and_push:

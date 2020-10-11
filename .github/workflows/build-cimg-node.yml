@@ -3,6 +3,10 @@ name: Docker Image (cimg/node) CI
 on:
   push:
     branches: [ master ]
+    paths:
+      - 'cimg/**'
+      - '.github/**'
+      - versions.json
 
 jobs:
   build_and_push:
