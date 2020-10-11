@@ -2,7 +2,7 @@
 
 ## Description
 
-Docker containers based on [cimg-node](https://github.com/CircleCI-Public/cimg-node) and official [node](https://hub.docker.com/_/node) images used across Synthetix repositories.
+Docker containers based on [cimg-node](https://github.com/CircleCI-Public/cimg-node) and official [node](https://hub.docker.com/_/node) images used across Synthetix repositories for CI purposes.
 
 ## Generating dockerfiles
 

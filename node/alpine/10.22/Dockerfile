@@ -29,11 +29,8 @@ RUN apk add --no-cache \
         linux-headers \
         tar
 
-# switch to node user
-USER node
-
 # set home and project dirs
-ENV HOME /home/node
+ENV HOME /home/root
 ENV PROJECT $HOME/project
 
 # create local bin dir
@@ -110,6 +107,8 @@ RUN npm install -g npm@6.14.8
 RUN rm $HOME/bin/npm
 # verify npm works
 RUN npm doctor
+# allow root in npm
+RUN npm config set unsafe-perm true
 
 # install yarn
 RUN for key in \

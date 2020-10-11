@@ -13,11 +13,8 @@ ENV DEBCONF_NONINTERACTIVE_SEEN true
 RUN groupadd --gid 1000 node \
   && useradd --uid 1000 --gid node --shell /bin/bash --create-home node
 
-# switch to node user
-USER node
-
 # set home and project dirs
-ENV HOME /home/node
+ENV HOME /home/root
 ENV PROJECT $HOME/project
 
 # create local bin dir
@@ -82,6 +79,8 @@ RUN npm install -g npm@6.14.8
 RUN rm $HOME/bin/npm
 # verify npm works
 RUN npm doctor
+# allow root in npm
+RUN npm config set unsafe-perm true
 
 # install yarn
 RUN set -ex \
