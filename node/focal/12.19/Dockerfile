@@ -28,6 +28,8 @@ RUN mkdir -p $PROJECT
 # work in local home dir
 WORKDIR $HOME
 
+# allow installing when the main user is root
+ENV npm_config_unsafe_perm true
 # set npm path for global modules
 ENV NPM_CONFIG_PREFIX $HOME/.npm-global
 # add npm global packages to path
@@ -79,8 +81,8 @@ RUN npm install -g npm@6.14.8
 RUN rm $HOME/bin/npm
 # verify npm works
 RUN npm doctor
-# allow root in npm
-RUN npm config set unsafe-perm true
+# should be root user
+RUN npm config -g set user root
 
 # install yarn
 RUN set -ex \
