@@ -5,9 +5,9 @@ on:
     branches: [ master ]
     paths:
       - 'node/**'
-      - '.github/**'
       - versions.json
       - docker-entrypoint.sh
+      - '.github/workflows/build-library-node.yml'
 
 jobs:
   build_and_push:

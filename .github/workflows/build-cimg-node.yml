@@ -5,8 +5,8 @@ on:
     branches: [ master ]
     paths:
       - 'cimg/**'
-      - '.github/**'
       - versions.json
+      - '.github/workflows/build-cimg-node.yml'
 
 jobs:
   build_and_push:
