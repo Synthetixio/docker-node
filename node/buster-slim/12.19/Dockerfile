@@ -149,6 +149,9 @@ ENV PATH $PATH:$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin
 # set yarn path for global modules
 RUN yarn config set prefix $HOME/.yarn
 
+# disable next.js telemetry
+ENV NEXT_TELEMETRY_DISABLED 1
+
 COPY docker-entrypoint.sh $HOME/bin/
 ENTRYPOINT ["docker-entrypoint.sh"]
 
