@@ -1,5 +1,7 @@
 FROM alpine:3.12@sha256:a15790640a6690aa1730c38cf0a440e2aa44aaca9b0e8931a9f2b0d7cc90fd65
 
+ENV CI true
+
 ENV NODE_VERSION 14.13.1
 
 # good colors for most applications

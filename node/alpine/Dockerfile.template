@@ -1,5 +1,7 @@
 FROM alpine:3.12@%%SHA%%
 
+ENV CI true
+
 ENV NODE_VERSION 10.22.1
 
 # good colors for most applications

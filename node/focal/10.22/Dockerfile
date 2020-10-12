@@ -1,5 +1,7 @@
 FROM buildpack-deps:focal@sha256:1967396d9c9e37ff2aa2c165e61e77394720250e5a8d8435e07c1a7b586378fa
 
+ENV CI true
+
 ENV NODE_VERSION 10.22.1
 
 # good colors for most applications

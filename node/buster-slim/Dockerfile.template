@@ -1,5 +1,7 @@
 FROM debian:buster-slim@%%SHA%%
 
+ENV CI true
+
 ENV NODE_VERSION 10.22.1
 
 # good colors for most applications

@@ -1,5 +1,7 @@
 FROM debian:buster-slim@sha256:8d81110c3f93a777e3f4053a6b18b70e4a1003655b8c2664bdf18b19043f99d9
 
+ENV CI true
+
 ENV NODE_VERSION 12.19.0
 
 # good colors for most applications
