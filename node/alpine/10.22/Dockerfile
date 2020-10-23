@@ -29,7 +29,19 @@ RUN apk add --no-cache \
         gnupg \
         libgcc \
         linux-headers \
-        tar
+        tar \
+        # mozjpeg dependencies
+        autoconf \
+        automake \
+        libtool \
+        tiff \
+        jpeg \
+        zlib \
+        zlib-dev \
+        pkgconf \
+        nasm \
+        file \
+        musl-dev
 
 # set home and project dirs
 ENV HOME /home/root
