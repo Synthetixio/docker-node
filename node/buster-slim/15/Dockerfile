@@ -111,7 +111,7 @@ RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
     && ln -s $HOME/bin/node $HOME/bin/nodejs
 
 # install latest npm, regardless of node version, for speed and fixes
-RUN npm install -g npm@6.14.8
+RUN npm install -g npm@7.0.3
 # remove old npm
 RUN rm $HOME/bin/npm
 # verify npm works

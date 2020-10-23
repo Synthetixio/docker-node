@@ -118,7 +118,7 @@ RUN ARCH= && alpineArch="$(apk --print-arch)" \
   && rm -f "node-v$NODE_VERSION-linux-$ARCH-musl.tar.xz"
 
 # install latest npm, regardless of node version, for speed and fixes
-RUN npm install -g npm@6.14.8
+RUN npm install -g npm@7.0.3
 # remove old npm
 RUN rm $HOME/bin/npm
 # verify npm works
