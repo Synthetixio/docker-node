@@ -1,5 +1,8 @@
 # docker-node
 
+![Docker Image (library/node) CI](https://github.com/Synthetixio/docker-node/workflows/Docker%20Image%20(library/node)%20CI/badge.svg)
+![Docker Image (cimg/node) CI](https://github.com/Synthetixio/docker-node/workflows/Docker%20Image%20(cimg/node)%20CI/badge.svg)
+
 ## Description
 
 Docker containers based on [cimg-node](https://github.com/CircleCI-Public/cimg-node) and official [node](https://hub.docker.com/_/node) images used across Synthetix repositories for CI purposes.
