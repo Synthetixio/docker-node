@@ -45,9 +45,12 @@ RUN groupadd --gid 1000 node \
 # set home and project dirs
 ENV HOME /home/root
 ENV PROJECT $HOME/project
+ENV NPM_GLOBAL_PATH $HOME/.npm-global
 
 # create local bin dir
 RUN mkdir -p $HOME/bin
+# create npm global packages dir
+RUN mkdir -p $NPM_GLOBAL_PATH
 # add local bin dir to path
 ENV PATH $PATH:$HOME/bin
 
@@ -60,9 +63,9 @@ WORKDIR $HOME
 # allow installing when the main user is root
 ENV npm_config_unsafe_perm true
 # set npm path for global modules
-ENV NPM_CONFIG_PREFIX $HOME/.npm-global
+ENV NPM_CONFIG_PREFIX $NPM_GLOBAL_PATH
 # add npm global packages to path
-ENV PATH $PATH:$HOME/.npm-global/bin
+ENV PATH $PATH:$NPM_GLOBAL_PATH/bin
 
 # avoid million NPM install messages
 ENV npm_config_loglevel warn
