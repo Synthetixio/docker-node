@@ -73,7 +73,7 @@ RUN ARCH= && alpineArch="$(apk --print-arch)" \
       && case "${alpineArch##*-}" in \
         x86_64) \
           ARCH='x64' \
-          CHECKSUM="b8b33ec1d2f6463ded7c02bf29ef4141ff4aabb2c0e0ba14cf16ac7c0a6a31a5" \
+          CHECKSUM="6c855f5aa9f93d1a9d2415dc70b567c7f06bb2b47309098934d790d51cae4d66" \
           ;; \
         *) ;; \
       esac \
