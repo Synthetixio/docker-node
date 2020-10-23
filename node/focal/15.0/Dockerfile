@@ -2,7 +2,7 @@ FROM buildpack-deps:focal@sha256:1967396d9c9e37ff2aa2c165e61e77394720250e5a8d843
 
 ENV CI true
 
-ENV NODE_VERSION 14.13.1
+ENV NODE_VERSION 15.0.1
 
 # good colors for most applications
 ENV TERM xterm
