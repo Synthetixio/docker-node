@@ -2,7 +2,7 @@ FROM alpine:3.12@%%SHA%%
 
 ENV CI true
 
-ENV NODE_VERSION 10.22.1
+ENV NODE_VERSION %%NODE_VERSION%%
 
 # good colors for most applications
 ENV TERM xterm
