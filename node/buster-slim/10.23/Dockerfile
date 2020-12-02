@@ -1,47 +1,46 @@
-FROM alpine:3.12@sha256:a15790640a6690aa1730c38cf0a440e2aa44aaca9b0e8931a9f2b0d7cc90fd65
+FROM debian:buster-slim@sha256:bb5473161a03d24b397c46778e58f845e29f1ce42a2953666ef8289f00afda42
 
 ENV CI true
 
-ENV NODE_VERSION 12.19.0
+ENV NODE_VERSION 10.23.0
 
 # good colors for most applications
 ENV TERM xterm
 
-# create new node user
-RUN addgroup -g 1000 node \
-    && adduser -u 1000 -G node -s /bin/sh -D node
+# no interactive frontend during docker build
+ENV DEBIAN_FRONTEND noninteractive
+ENV DEBCONF_NONINTERACTIVE_SEEN true
 
-# install deps
-RUN apk add --no-cache \
-        bash \
-        python2 \
-        libstdc++ \
-        git \
-        py-pip \
-        py-setuptools \
-        make \
-        g++ \
-        gcc \
-        clang \
-        unzip \
-        curl \
-        binutils-gold \
-        gnupg \
-        libgcc \
-        linux-headers \
-        tar \
-        # mozjpeg dependencies
-        autoconf \
-        automake \
-        libtool \
-        tiff \
-        jpeg \
-        zlib \
-        zlib-dev \
-        pkgconf \
-        nasm \
-        file \
-        musl-dev
+# install curl for yarn
+RUN apt-get update \
+    && apt-get -y install --no-install-recommends \
+    curl \
+    ca-certificates \
+    # install git and python
+    git \
+    python \
+    python-pip \
+    python-setuptools \
+    # common build dependencies
+    make \
+    g++ \
+    gcc \
+    clang \
+    unzip \
+    # node deps
+    wget \
+    gnupg \
+    dirmngr \
+    xz-utils \
+    libatomic1 \
+    libc6 \
+    libgcc1 \
+    libstdc++6 \
+    && rm -rf /var/lib/apt/lists/*
+
+# create new node user
+RUN groupadd --gid 1000 node \
+  && useradd --uid 1000 --gid node --shell /bin/bash --create-home node
 
 # set home and project dirs
 ENV HOME /home/root
@@ -69,23 +68,17 @@ ENV PATH $PATH:$HOME/.npm-global/bin
 ENV npm_config_loglevel warn
 
 # install node
-RUN ARCH= && alpineArch="$(apk --print-arch)" \
-      && case "${alpineArch##*-}" in \
-        x86_64) \
-          ARCH='x64' \
-          CHECKSUM="0d26ef0d4fa7ffe4f9f4a954bbf6172372528636acf2a69b0fc9ac22e247ac23" \
-          ;; \
-        *) ;; \
-      esac \
-  && if [ -n "${CHECKSUM}" ]; then \
-    set -eu; \
-    curl -fsSLO --compressed "https://unofficial-builds.nodejs.org/download/release/v$NODE_VERSION/node-v$NODE_VERSION-linux-$ARCH-musl.tar.xz"; \
-    echo "$CHECKSUM  node-v$NODE_VERSION-linux-$ARCH-musl.tar.xz" | sha256sum -c - \
-      && tar -xJf "node-v$NODE_VERSION-linux-$ARCH-musl.tar.xz" -C $HOME --strip-components=1 --no-same-owner \
-      && ln -s $HOME/bin/node $HOME/bin/nodejs; \
-  else \
-    echo "Building from source" \
-    # gpg keys listed at https://github.com/nodejs/node#release-keys
+RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
+    && case "${dpkgArch##*-}" in \
+      amd64) ARCH='x64';; \
+      ppc64el) ARCH='ppc64le';; \
+      s390x) ARCH='s390x';; \
+      arm64) ARCH='arm64';; \
+      armhf) ARCH='armv7l';; \
+      i386) ARCH='x86';; \
+      *) echo "unsupported architecture"; exit 1 ;; \
+    esac \
+    && set -ex \
     && for key in \
       4ED778F539E3634C779C87C6D7062848A1AB005C \
       94AE36675C464D64BAFA68DD7434390BDBE9B9C5 \
@@ -102,23 +95,23 @@ RUN ARCH= && alpineArch="$(apk --print-arch)" \
       gpg --batch --keyserver hkp://ipv4.pool.sks-keyservers.net --recv-keys "$key" || \
       gpg --batch --keyserver hkp://pgp.mit.edu:80 --recv-keys "$key" ; \
     done \
-    && curl -fsSLO --compressed "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION.tar.xz" \
+    && curl -fsSLO --compressed "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-$ARCH.tar.xz" \
     && curl -fsSLO --compressed "https://nodejs.org/dist/v$NODE_VERSION/SHASUMS256.txt.asc" \
     && gpg --batch --decrypt --output SHASUMS256.txt SHASUMS256.txt.asc \
-    && grep " node-v$NODE_VERSION.tar.xz\$" SHASUMS256.txt | sha256sum -c - \
-    && tar -xf "node-v$NODE_VERSION.tar.xz" \
-    && cd "node-v$NODE_VERSION" \
-    && ./configure \
-    && make -j$(getconf _NPROCESSORS_ONLN) V= \
-    && make install \
-    && cd .. \
-    && rm -Rf "node-v$NODE_VERSION" \
-    && rm "node-v$NODE_VERSION.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt; \
-  fi \
-  && rm -f "node-v$NODE_VERSION-linux-$ARCH-musl.tar.xz"
+    && grep " node-v$NODE_VERSION-linux-$ARCH.tar.xz\$" SHASUMS256.txt | sha256sum -c - \
+    && tar -xJf "node-v$NODE_VERSION-linux-$ARCH.tar.xz" -C $HOME --strip-components=1 --no-same-owner \
+    && rm "node-v$NODE_VERSION-linux-$ARCH.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt \
+    && find $HOME -type f -executable -exec ldd '{}' ';' \
+      | awk '/=>/ { print $(NF-1) }' \
+      | sort -u \
+      | xargs -r dpkg-query --search \
+      | cut -d: -f1 \
+      | sort -u \
+      | xargs -r apt-mark manual \
+    && ln -s $HOME/bin/node $HOME/bin/nodejs
 
 # install latest npm, regardless of node version, for speed and fixes
-RUN npm install -g npm@6.14.8
+RUN npm install -g npm@6.14.9
 # remove old npm
 RUN rm $HOME/bin/npm
 # verify npm works
@@ -127,7 +120,9 @@ RUN npm doctor
 RUN npm config -g set user root
 
 # install yarn
-RUN for key in \
+RUN set -ex \
+  && savedAptMark="$(apt-mark showmanual)" \
+  && for key in \
     6A010C5166006599AA17F08146C2130DFD2497F5 \
   ; do \
     gpg --batch --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys "$key" || \
@@ -141,7 +136,14 @@ RUN for key in \
   && tar -xzf yarn-v1.22.10.tar.gz -C $HOME \
   && ln -s $HOME/yarn-v1.22.10/bin/yarn $HOME/bin/yarn \
   && ln -s $HOME/yarn-v1.22.10/bin/yarnpkg $HOME/bin/yarnpkg \
-  && rm yarn-v1.22.10.tar.gz.asc yarn-v1.22.10.tar.gz
+  && rm yarn-v1.22.10.tar.gz.asc yarn-v1.22.10.tar.gz \
+  && find $HOME -type f -executable -exec ldd '{}' ';' \
+    | awk '/=>/ { print $(NF-1) }' \
+    | sort -u \
+    | xargs -r dpkg-query --search \
+    | cut -d: -f1 \
+    | sort -u \
+    | xargs -r apt-mark manual
 
 # add yarn global packages to path
 ENV PATH $PATH:$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin
@@ -162,6 +164,7 @@ RUN echo "node version:  $(node -v) \n" \
   "npm version:           $(npm -v) \n" \
   "yarn version:          $(yarn -v) \n" \
   "git version:           $(git --version) \n" \
-  "user:                  $(whoami) \n"
+  "user:                  $(whoami) \n" \
+  "debian version:        $(cat /etc/os-release)"
 
 CMD ["node"]

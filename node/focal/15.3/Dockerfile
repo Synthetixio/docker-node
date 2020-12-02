@@ -1,8 +1,8 @@
-FROM buildpack-deps:focal@sha256:1967396d9c9e37ff2aa2c165e61e77394720250e5a8d8435e07c1a7b586378fa
+FROM buildpack-deps:focal@sha256:12c855ab6cb2f0a9f0bc37b87b3787608d5d4bdba61100f55c2e754fce5a02c1
 
 ENV CI true
 
-ENV NODE_VERSION 15.0.1
+ENV NODE_VERSION 15.3.0
 
 # good colors for most applications
 ENV TERM xterm
@@ -81,7 +81,7 @@ RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
   && ln -s $HOME/bin/node $HOME/bin/nodejs
 
 # install latest npm, regardless of node version, for speed and fixes
-RUN npm install -g npm@7.0.3
+RUN npm install -g npm@7.0.15
 # remove old npm
 RUN rm $HOME/bin/npm
 # verify npm works

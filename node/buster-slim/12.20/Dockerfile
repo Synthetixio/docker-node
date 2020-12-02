@@ -1,8 +1,8 @@
-FROM debian:buster-slim@sha256:8d81110c3f93a777e3f4053a6b18b70e4a1003655b8c2664bdf18b19043f99d9
+FROM debian:buster-slim@sha256:bb5473161a03d24b397c46778e58f845e29f1ce42a2953666ef8289f00afda42
 
 ENV CI true
 
-ENV NODE_VERSION 12.19.0
+ENV NODE_VERSION 12.20.0
 
 # good colors for most applications
 ENV TERM xterm
@@ -111,7 +111,7 @@ RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
     && ln -s $HOME/bin/node $HOME/bin/nodejs
 
 # install latest npm, regardless of node version, for speed and fixes
-RUN npm install -g npm@6.14.8
+RUN npm install -g npm@6.14.9
 # remove old npm
 RUN rm $HOME/bin/npm
 # verify npm works
