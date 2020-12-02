@@ -1,20 +1,18 @@
-name: Docker Image (library/node) CI
+name: Docker Image (cimg/node) CI
 
 on:
   push:
     branches: [ master ]
     paths:
-      - 'node/**'
+      - 'cimg/**'
       - versions.json
-      - docker-entrypoint.sh
-      - '.github/workflows/build-library-node.yml'
+      - '.github/workflows/build-cimg-node.yml'
 
 jobs:
   build_and_push:
     strategy:
       matrix:
         node: [ 10.23, '12.20', 15.3 ]
-        distro: [ alpine, buster-slim, focal ]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -30,10 +28,9 @@ jobs:
         uses: actions/cache@3b70782066bd817837b6bd8c518d45b54d91bf76 # pin@v2
         with:
           path: /tmp/.buildx-cache
-          key: node-${{ runner.os }}-${{ matrix.node }}-${{ matrix.distro }}-buildx-${{
-            github.sha }}
+          key: cimg-${{ runner.os }}-${{ matrix.node }}-buildx-${{ github.sha }}
           restore-keys: |
-            node-${{ runner.os }}-${{ matrix.node }}-${{ matrix.distro }}-buildx-
+            cimg-${{ runner.os }}-${{ matrix.node }}-buildx-
 
       - name: Login to DockerHub
         uses: docker/login-action@adb73476b6e06caddec5db0bc1deacbec8cdd947 # pin@v1
@@ -48,16 +45,17 @@ jobs:
           username: synthetixio
           password: ${{ secrets.GH_PACKAGES_READ_WRITE }}
 
-      - name: Build and push (${{ matrix.distro }}[${{ matrix.node }}])
+      - name: Build and push
         uses: docker/build-push-action@6925f94b6b8f23d547930f88b9886036ac92d510 # pin@v2
         with:
           context: .
-          file: ./node/${{ matrix.distro }}/${{ matrix.node }}/Dockerfile
+          file: ./cimg/${{ matrix.node }}/Dockerfile
           platforms: linux/amd64
           push: true
           tags: |
-            ghcr.io/synthetixio/${{ github.event.repository.name }}/${{ matrix.distro }}:${{ matrix.node }}
-            synthetixio/${{ github.event.repository.name }}:${{ matrix.node }}-${{ matrix.distro }}
+            ghcr.io/synthetixio/${{ github.event.repository.name }}/base:${{ matrix.node }}
+            ghcr.io/synthetixio/${{ github.event.repository.name }}/cimg:${{ matrix.node }}
+            synthetixio/${{ github.event.repository.name }}:${{ matrix.node }}-cimg
 
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
