@@ -81,8 +81,10 @@ RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
 RUN npm install -g npm@7.5.4
 # remove old npm
 RUN rm $HOME/bin/npm
+RUN mkdir ~/node_modules
+RUN mkdir ~/node_modules/.bin
 # verify npm works
-RUN npm doctor
+# RUN npm doctor
 # should be root user
 RUN npm config -g set user root
 
