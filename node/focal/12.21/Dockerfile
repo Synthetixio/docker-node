@@ -1,5 +1,9 @@
 FROM buildpack-deps:focal@sha256:3b4708b143478809632ef4bc3f824e54eb12b973aa6319c8101911c4d43fb22e
 
+# install pip
+RUN curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+RUN python3 get-pip.py
+
 ENV CI true
 
 ENV NODE_VERSION 12.21.0
@@ -82,9 +86,10 @@ RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
 RUN npm install -g npm@7.5.6
 # remove old npm
 RUN rm $HOME/bin/npm
+# create folders for npm doctor
 RUN mkdir ~/node_modules
 RUN mkdir ~/node_modules/.bin
-# verify npm works
+# verify npm works (fails if node < 14)
 # RUN npm doctor
 # should be root user
 RUN npm config -g set user root
@@ -115,6 +120,17 @@ RUN yarn config set prefix $HOME/.yarn
 
 # disable next.js telemetry
 ENV NEXT_TELEMETRY_DISABLED 1
+
+# install python3-dev
+RUN apt-get update && \
+  apt-get install --no-install-recommends -y \
+  python3-dev
+
+# add local python dir to path
+ENV PATH $PATH:$HOME/.local/bin
+
+# install slither
+RUN pip3 install --user slither-analyzer
 
 COPY docker-entrypoint.sh $HOME/bin/
 ENTRYPOINT ["docker-entrypoint.sh"]
