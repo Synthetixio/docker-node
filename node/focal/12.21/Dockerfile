@@ -132,6 +132,9 @@ ENV PATH $PATH:$HOME/.local/bin
 # install slither
 RUN pip3 install --user slither-analyzer
 
+# circleci fix!
+RUN mkdir ~/.ssh/ && echo -e "Host github.com\n\tStrictHostKeyChecking no\n" > ~/.ssh/config
+
 COPY docker-entrypoint.sh $HOME/bin/
 ENTRYPOINT ["docker-entrypoint.sh"]
 
