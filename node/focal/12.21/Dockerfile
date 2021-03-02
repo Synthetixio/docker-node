@@ -84,8 +84,12 @@ RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
 
 # install latest npm, regardless of node version, for speed and fixes
 RUN npm install -g npm@7.5.6
+# install latest npx
+RUN npm install -g --force npx@10.2.2
 # remove old npm
 RUN rm $HOME/bin/npm
+# remove old npx
+RUN rm $HOME/bin/npx
 # create folders for npm doctor
 RUN mkdir ~/node_modules
 RUN mkdir ~/node_modules/.bin
