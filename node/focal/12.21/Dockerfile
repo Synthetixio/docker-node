@@ -37,9 +37,9 @@ WORKDIR $HOME
 # allow installing when the main user is root
 ENV npm_config_unsafe_perm true
 # set npm path for global modules
-ENV NPM_CONFIG_PREFIX $HOME/.npm-global
+# ENV NPM_CONFIG_PREFIX $HOME/.npm-global
 # add npm global packages to path
-ENV PATH $PATH:$HOME/.npm-global/bin
+# ENV PATH $PATH:$HOME/.npm-global/bin
 
 # avoid million NPM install messages
 ENV npm_config_loglevel warn
@@ -85,11 +85,11 @@ RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
 # install latest npm, regardless of node version, for speed and fixes
 RUN npm install -g npm@7.5.6
 # install latest npx
-RUN npm install -g --force npx@10.2.2
+# RUN npm install -g --force npx@10.2.2
 # remove old npm
-RUN rm $HOME/bin/npm
+# RUN rm $HOME/bin/npm
 # remove old npx
-RUN rm $HOME/bin/npx
+# RUN rm $HOME/bin/npx
 # create folders for npm doctor
 RUN mkdir ~/node_modules
 RUN mkdir ~/node_modules/.bin
