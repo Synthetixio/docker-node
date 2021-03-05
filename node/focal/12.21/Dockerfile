@@ -1,4 +1,4 @@
-FROM ubuntu:focal@sha256:e3d7ff9efd8431d9ef39a144c45992df5502c995b9ba3c53ff70c5b52a848d9c
+FROM buildpack-deps:focal@sha256:3b4708b143478809632ef4bc3f824e54eb12b973aa6319c8101911c4d43fb22e
 
 # install pip
 RUN curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
