@@ -1,36 +1,19 @@
 FROM ubuntu:focal@sha256:e3d7ff9efd8431d9ef39a144c45992df5502c995b9ba3c53ff70c5b52a848d9c
 
-# Change default shell for RUN from Dash to Bash
-SHELL ["/bin/bash", "-exo", "pipefail", "-c"]
-
 ENV CI true
+
 ENV NODE_VERSION 12.21.0
 
-# set home and project dirs
-ENV HOME /home/root
-ENV PROJECT $HOME/project
+# good colors for most applications
+ENV TERM xterm
 
 # no interactive frontend during docker build
 ENV DEBIAN_FRONTEND noninteractive
 ENV DEBCONF_NONINTERACTIVE_SEEN true
 
-# good colors for most applications
-ENV TERM xterm
-
-# create local bin dir
-RUN mkdir -p $HOME/bin
-# add local bin dir to path
-ENV PATH $PATH:$HOME/bin
-
-# create project dir
-RUN mkdir -p $PROJECT
-
-# work in local home dir
-WORKDIR $HOME
-
 # create new node user
-# RUN groupadd --gid 1000 node \
-#   && useradd --uid 1000 --gid node --shell /bin/bash --create-home node
+RUN groupadd --gid 1000 node \
+  && useradd --uid 1000 --gid node --shell /bin/bash --create-home node
 
 RUN apt-get update && apt-get install -y \
 		autoconf \
@@ -54,7 +37,6 @@ RUN apt-get update && apt-get install -y \
 		pkg-config \
 		software-properties-common \
 		# already installed but hear for consistency
-    locales \
 		sudo \
 		tar \
 		tzdata \
@@ -63,13 +45,22 @@ RUN apt-get update && apt-get install -y \
 		vim-tiny \
 		wget \
 		zip && \
-    locale-gen en_US.UTF-8 && \
 	rm -rf /var/lib/apt/lists/*
 
-# set lang vars
-ENV LANG=en_US.UTF-8 \
-	LANGUAGE=en_US:en \
-	LC_ALL=en_US.UTF-8
+# set home and project dirs
+ENV HOME /home/root
+ENV PROJECT $HOME/project
+
+# create local bin dir
+RUN mkdir -p $HOME/bin
+# add local bin dir to path
+ENV PATH $PATH:$HOME/bin
+
+# create project dir
+RUN mkdir -p $PROJECT
+
+# work in local home dir
+WORKDIR $HOME
 
 # allow installing when the main user is root
 ENV npm_config_unsafe_perm true
@@ -186,4 +177,4 @@ RUN echo "node version:  $(node -v) \n" \
   "user:                  $(whoami) \n" \
   "ubuntu version:        $(cat /etc/lsb-release)"
 
-# CMD ["node"]
+CMD ["node"]
