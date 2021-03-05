@@ -19,38 +19,6 @@ ENV DEBCONF_NONINTERACTIVE_SEEN true
 RUN groupadd --gid 1000 node \
   && useradd --uid 1000 --gid node --shell /bin/bash --create-home node
 
-RUN apt-get update && apt-get install -y \
-		autoconf \
-		build-essential \
-		ca-certificates \
-		apt-transport-https \
-		# already installed but hear for consistency
-		curl \
-		git \
-		gnupg \
-		gnupg-agent \
-		gzip \
-		jq \
-		# for ssh-enabled builds
-		nano \
-		net-tools \
-		netcat \
-		openssh-client \
-		parallel \
-		# compiling tool
-		pkg-config \
-		software-properties-common \
-		# already installed but hear for consistency
-		sudo \
-		tar \
-		tzdata \
-		unzip \
-		# for ssh-enabled builds
-		vim-tiny \
-		wget \
-		zip && \
-	rm -rf /var/lib/apt/lists/*
-
 # set home and project dirs
 ENV HOME /home/root
 ENV PROJECT $HOME/project
