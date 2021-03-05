@@ -74,9 +74,9 @@ ENV LANG=en_US.UTF-8 \
 # allow installing when the main user is root
 ENV npm_config_unsafe_perm true
 # set npm path for global modules
-# ENV NPM_CONFIG_PREFIX $HOME/.npm-global
-# # add npm global packages to path
-# ENV PATH $PATH:$HOME/.npm-global/bin
+ENV NPM_CONFIG_PREFIX $HOME/.npm-global
+# add npm global packages to path
+ENV PATH $PATH:$HOME/.npm-global/bin
 
 # avoid million NPM install messages
 ENV npm_config_loglevel warn
@@ -132,28 +132,28 @@ RUN mkdir ~/node_modules/.bin
 RUN npm config -g set user root
 
 # install yarn
-# RUN set -ex \
-#   && for key in \
-#     6A010C5166006599AA17F08146C2130DFD2497F5 \
-#   ; do \
-#     gpg --batch --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys "$key" || \
-#     gpg --batch --keyserver hkp://ipv4.pool.sks-keyservers.net --recv-keys "$key" || \
-#     gpg --batch --keyserver hkp://pgp.mit.edu:80 --recv-keys "$key" ; \
-#   done \
-#   && curl -fsSLO --compressed "https://yarnpkg.com/downloads/1.22.5/yarn-v1.22.5.tar.gz" \
-#   && curl -fsSLO --compressed "https://yarnpkg.com/downloads/1.22.5/yarn-v1.22.5.tar.gz.asc" \
-#   && gpg --batch --verify yarn-v1.22.5.tar.gz.asc yarn-v1.22.5.tar.gz \
-#   && mkdir -p /opt \
-#   && tar -xzf yarn-v1.22.5.tar.gz -C /opt/ \
-#   && ln -s /opt/yarn-v1.22.5/bin/yarn /usr/local/bin/yarn \
-#   && ln -s /opt/yarn-v1.22.5/bin/yarnpkg /usr/local/bin/yarnpkg \
-#   && rm yarn-v1.22.5.tar.gz.asc yarn-v1.22.5.tar.gz
+RUN set -ex \
+  && for key in \
+    6A010C5166006599AA17F08146C2130DFD2497F5 \
+  ; do \
+    gpg --batch --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys "$key" || \
+    gpg --batch --keyserver hkp://ipv4.pool.sks-keyservers.net --recv-keys "$key" || \
+    gpg --batch --keyserver hkp://pgp.mit.edu:80 --recv-keys "$key" ; \
+  done \
+  && curl -fsSLO --compressed "https://yarnpkg.com/downloads/1.22.5/yarn-v1.22.5.tar.gz" \
+  && curl -fsSLO --compressed "https://yarnpkg.com/downloads/1.22.5/yarn-v1.22.5.tar.gz.asc" \
+  && gpg --batch --verify yarn-v1.22.5.tar.gz.asc yarn-v1.22.5.tar.gz \
+  && mkdir -p /opt \
+  && tar -xzf yarn-v1.22.5.tar.gz -C /opt/ \
+  && ln -s /opt/yarn-v1.22.5/bin/yarn /usr/local/bin/yarn \
+  && ln -s /opt/yarn-v1.22.5/bin/yarnpkg /usr/local/bin/yarnpkg \
+  && rm yarn-v1.22.5.tar.gz.asc yarn-v1.22.5.tar.gz
 
-# # add yarn global packages to path
-# ENV PATH $PATH:$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin
+# add yarn global packages to path
+ENV PATH $PATH:$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin
 
 # set yarn path for global modules
-# RUN yarn config set prefix $HOME/.yarn
+RUN yarn config set prefix $HOME/.yarn
 
 # disable next.js telemetry
 ENV NEXT_TELEMETRY_DISABLED 1
@@ -173,8 +173,8 @@ RUN python3 get-pip.py
 # install slither
 RUN pip3 install --user slither-analyzer
 
-# COPY docker-entrypoint.sh $HOME/bin/
-# ENTRYPOINT ["docker-entrypoint.sh"]
+COPY docker-entrypoint.sh $HOME/bin/
+ENTRYPOINT ["docker-entrypoint.sh"]
 
 WORKDIR $PROJECT
 
