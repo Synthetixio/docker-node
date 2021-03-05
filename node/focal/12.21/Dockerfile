@@ -1,5 +1,9 @@
 FROM ubuntu:focal@sha256:e3d7ff9efd8431d9ef39a144c45992df5502c995b9ba3c53ff70c5b52a848d9c
 
+# install pip
+RUN curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+RUN python3 get-pip.py
+
 ENV CI true
 
 ENV NODE_VERSION 12.21.0
@@ -156,10 +160,6 @@ RUN apt-get update && \
 
 # add local python dir to path
 ENV PATH $PATH:$HOME/.local/bin
-
-# install pip
-RUN curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
-RUN python3 get-pip.py
 
 # install slither
 RUN pip3 install --user slither-analyzer
