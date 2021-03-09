@@ -20,7 +20,7 @@ RUN groupadd --gid 1000 node \
   && useradd --uid 1000 --gid node --shell /bin/bash --create-home node
 
 # set home and project dirs
-ENV HOME /home/root
+ENV HOME /root
 ENV PROJECT $HOME/project
 
 # create local bin dir
