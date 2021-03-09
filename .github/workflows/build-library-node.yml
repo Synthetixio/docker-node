@@ -24,7 +24,7 @@ jobs:
         uses: docker/setup-qemu-action@6520a2d2cb6db42c90c297c8025839c98e531268 # pin@v1
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@07b1484797040ef4a1109a03e65b923de8f39e07 # pin@v1
+        uses: docker/setup-buildx-action@154c24e1f33dbb5865a021c99f1318cfebf27b32 # pin@v1
 
       - name: Cache Docker layers
         uses: actions/cache@3b70782066bd817837b6bd8c518d45b54d91bf76 # pin@v2
@@ -36,20 +36,20 @@ jobs:
             node-${{ runner.os }}-${{ matrix.node }}-${{ matrix.distro }}-buildx-
 
       - name: Login to DockerHub
-        uses: docker/login-action@adb73476b6e06caddec5db0bc1deacbec8cdd947 # pin@v1
+        uses: docker/login-action@f3364599c6aa293cdc2b8391b1b56d0c30e45c8a # pin@v1
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Login to GitHub Container Registry
-        uses: docker/login-action@adb73476b6e06caddec5db0bc1deacbec8cdd947 # pin@v1
+        uses: docker/login-action@f3364599c6aa293cdc2b8391b1b56d0c30e45c8a # pin@v1
         with:
           registry: ghcr.io
           username: synthetixio
           password: ${{ secrets.GH_PACKAGES_READ_WRITE }}
 
       - name: Build and push (${{ matrix.distro }}[${{ matrix.node }}])
-        uses: docker/build-push-action@6925f94b6b8f23d547930f88b9886036ac92d510 # pin@v2
+        uses: docker/build-push-action@9379083e426e2e84abb80c8c091f5cdeb7d3fd7a # pin@v2
         with:
           context: .
           file: ./${{ matrix.distro }}/${{ matrix.node }}/Dockerfile
