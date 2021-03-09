@@ -1,4 +1,4 @@
-FROM alpine:3.13@%%SHA%%
+FROM alpine:3.12@%%SHA%%
 
 ENV NODE_VERSION %%NODE_VERSION%%
 
