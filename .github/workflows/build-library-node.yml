@@ -13,7 +13,7 @@ jobs:
   build_and_push:
     strategy:
       matrix:
-        node: [ '12.21']
+        node: [ '10.24', '12.21', '14.16', '15.11']
         distro: [ focal, alpine ]
     runs-on: ubuntu-latest
     steps:
@@ -52,12 +52,11 @@ jobs:
         uses: docker/build-push-action@6925f94b6b8f23d547930f88b9886036ac92d510 # pin@v2
         with:
           context: .
-          file: ./node/${{ matrix.distro }}/${{ matrix.node }}/Dockerfile
+          file: ./${{ matrix.distro }}/${{ matrix.node }}/Dockerfile
           platforms: linux/amd64
           push: true
           tags: |
             ghcr.io/synthetixio/${{ github.event.repository.name }}/${{ matrix.distro }}:${{ matrix.node }}
             synthetixio/${{ github.event.repository.name }}:${{ matrix.node }}-${{ matrix.distro }}
-
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
