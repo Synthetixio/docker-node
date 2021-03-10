@@ -153,8 +153,8 @@ ENV PATH $PATH:$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin
 RUN yarn config set prefix $HOME/.yarn
 
 ############### wrapping up ###############
-COPY docker-entrypoint.sh $HOME/bin/
-ENTRYPOINT ["docker-entrypoint.sh"]
+# COPY docker-entrypoint.sh $HOME/bin/
+# ENTRYPOINT ["docker-entrypoint.sh"]
 WORKDIR $PROJECT
 # print versions of local tools
 RUN echo "node version:  $(node -v) \n" \
@@ -162,4 +162,4 @@ RUN echo "node version:  $(node -v) \n" \
   "yarn version:          $(yarn -v) \n" \
   "git version:           $(git --version) \n" \
   "user:                  $(whoami) \n"
-CMD ["node"]
+# CMD ["node"]
