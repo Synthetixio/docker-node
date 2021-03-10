@@ -4,7 +4,7 @@ on:
   push:
     branches: [ master ]
     paths:
-      - 'node/**'
+      - '**'
       - versions.json
       - docker-entrypoint.sh
       - '.github/workflows/build-library-node.yml'
