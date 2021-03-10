@@ -120,7 +120,7 @@ ENV PATH $PATH:$HOME/.npm-global/bin
 # should be root user
 RUN npm config -g set user root
 # install latest npm, regardless of node version, for speed and fixes
-RUN npm install -g npm@7.6.0
+RUN npm install -g npm@7.6.2
 # remove old npm
 RUN rm $HOME/bin/npm
 # create folders for npm doctor
@@ -129,8 +129,6 @@ RUN mkdir $HOME/node_modules/.bin
 # verify npm works
 # disabled due to required update to node LTS
 # RUN npm doctor
-RUN npm config set user 0
-RUN npm config set unsafe-perm true
 
 ############### yarn setup ###############
 # install yarn
