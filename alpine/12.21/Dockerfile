@@ -124,11 +124,12 @@ RUN npm install -g npm@7.6.2
 # remove old npm
 RUN rm $HOME/bin/npm
 # create folders for npm doctor
-RUN mkdir $HOME/node_modules
-RUN mkdir $HOME/node_modules/.bin
+RUN mkdir -p $HOME/node_modules
+RUN mkdir -p $HOME/node_modules/.bin
 # verify npm works
 # disabled due to required update to node LTS
 # RUN npm doctor
+RUN mkdir -p /__w
 
 ############### yarn setup ###############
 # install yarn
