@@ -117,12 +117,12 @@ ENV npm_config_unsafe_perm true
 ENV NPM_CONFIG_PREFIX $HOME/.npm-global
 # add npm global packages to path
 ENV PATH $PATH:$HOME/.npm-global/bin
-# should be root user
-RUN npm config -g set user root
 # install latest npm, regardless of node version, for speed and fixes
-RUN npm install -g npm@7.6.0
+RUN npm install -g npm@7.6.3
 # remove old npm
 RUN rm $HOME/bin/npm
+# should be root user
+RUN npm config -g set user root
 # create folders for npm doctor
 RUN mkdir $HOME/node_modules
 RUN mkdir $HOME/node_modules/.bin
@@ -153,8 +153,8 @@ ENV PATH $PATH:$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin
 RUN yarn config set prefix $HOME/.yarn
 
 ############### wrapping up ###############
-COPY docker-entrypoint.sh $HOME/bin/
-ENTRYPOINT ["docker-entrypoint.sh"]
+# COPY docker-entrypoint.sh $HOME/bin/
+# ENTRYPOINT ["docker-entrypoint.sh"]
 WORKDIR $PROJECT
 # print versions of local tools
 RUN echo "node version:  $(node -v) \n" \
@@ -162,4 +162,4 @@ RUN echo "node version:  $(node -v) \n" \
   "yarn version:          $(yarn -v) \n" \
   "git version:           $(git --version) \n" \
   "user:                  $(whoami) \n"
-CMD ["node"]
+# CMD ["node"]
