@@ -1,6 +1,6 @@
-FROM buildpack-deps:focal@sha256:ff60c127071448098b1dbfc08f239cb3847d575c0e9fe92ec853431cc9563e00
+FROM buildpack-deps:focal@sha256:1c5471059bb2d81a78c470fe7565d9892a420af77c08073d7bb25a6e110f1edb
 
-ENV NODE_VERSION 12.21.0
+ENV NODE_VERSION 12.22.1
 
 ############### env setup ###############
 # always behave as CI
@@ -106,13 +106,13 @@ RUN set -ex \
     gpg --batch --keyserver hkp://ipv4.pool.sks-keyservers.net --recv-keys "$key" || \
     gpg --batch --keyserver hkp://pgp.mit.edu:80 --recv-keys "$key" ; \
   done \
-  && curl -fsSLO --compressed "https://yarnpkg.com/downloads/1.22.10/yarn-v1.22.10.tar.gz" \
-  && curl -fsSLO --compressed "https://yarnpkg.com/downloads/1.22.10/yarn-v1.22.10.tar.gz.asc" \
-  && gpg --batch --verify yarn-v1.22.10.tar.gz.asc yarn-v1.22.10.tar.gz \
-  && tar -xzf yarn-v1.22.10.tar.gz -C $HOME \
-  && ln -s $HOME/yarn-v1.22.10/bin/yarn $HOME/bin/yarn \
-  && ln -s $HOME/yarn-v1.22.10/bin/yarnpkg $HOME/bin/yarnpkg \
-  && rm yarn-v1.22.10.tar.gz.asc yarn-v1.22.10.tar.gz
+  && curl -fsSLO --compressed "https://yarnpkg.com/downloads/1.22.5/yarn-v1.22.5.tar.gz" \
+  && curl -fsSLO --compressed "https://yarnpkg.com/downloads/1.22.5/yarn-v1.22.5.tar.gz.asc" \
+  && gpg --batch --verify yarn-v1.22.5.tar.gz.asc yarn-v1.22.5.tar.gz \
+  && tar -xzf yarn-v1.22.5.tar.gz -C $HOME \
+  && ln -s $HOME/yarn-v1.22.5/bin/yarn $HOME/bin/yarn \
+  && ln -s $HOME/yarn-v1.22.5/bin/yarnpkg $HOME/bin/yarnpkg \
+  && rm yarn-v1.22.5.tar.gz.asc yarn-v1.22.5.tar.gz
 # add yarn global packages to path
 ENV PATH $PATH:$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin
 # set yarn path for global modules

@@ -1,4 +1,4 @@
-FROM alpine:3.12@sha256:2a8831c57b2e2cb2cda0f3a7c260d3b6c51ad04daea0b3bfc5b55f489ebafd71
+FROM alpine:3.12@sha256:a9c28c813336ece5bb98b36af5b66209ed777a394f4f856c6e62267790883820
 
 ENV NODE_VERSION 14.16.0
 
@@ -120,7 +120,7 @@ ENV PATH $PATH:$HOME/.npm-global/bin
 # should be root user
 RUN npm config -g set user root
 # install latest npm, regardless of node version, for speed and fixes
-RUN npm install -g npm@7.6.0
+RUN npm install -g npm@7.12.0
 # remove old npm
 RUN rm $HOME/bin/npm
 # create folders for npm doctor
@@ -139,14 +139,14 @@ RUN for key in \
     gpg --batch --keyserver hkp://ipv4.pool.sks-keyservers.net --recv-keys "$key" || \
     gpg --batch --keyserver hkp://pgp.mit.edu:80 --recv-keys "$key" ; \
   done \
-  && curl -fsSLO --compressed "https://yarnpkg.com/downloads/1.22.10/yarn-v1.22.10.tar.gz" \
-  && curl -fsSLO --compressed "https://yarnpkg.com/downloads/1.22.10/yarn-v1.22.10.tar.gz.asc" \
-  && gpg --batch --verify yarn-v1.22.10.tar.gz.asc yarn-v1.22.10.tar.gz \
+  && curl -fsSLO --compressed "https://yarnpkg.com/downloads/1.22.5/yarn-v1.22.5.tar.gz" \
+  && curl -fsSLO --compressed "https://yarnpkg.com/downloads/1.22.5/yarn-v1.22.5.tar.gz.asc" \
+  && gpg --batch --verify yarn-v1.22.5.tar.gz.asc yarn-v1.22.5.tar.gz \
   && mkdir -p $HOME \
-  && tar -xzf yarn-v1.22.10.tar.gz -C $HOME \
-  && ln -s $HOME/yarn-v1.22.10/bin/yarn $HOME/bin/yarn \
-  && ln -s $HOME/yarn-v1.22.10/bin/yarnpkg $HOME/bin/yarnpkg \
-  && rm yarn-v1.22.10.tar.gz.asc yarn-v1.22.10.tar.gz
+  && tar -xzf yarn-v1.22.5.tar.gz -C $HOME \
+  && ln -s $HOME/yarn-v1.22.5/bin/yarn $HOME/bin/yarn \
+  && ln -s $HOME/yarn-v1.22.5/bin/yarnpkg $HOME/bin/yarnpkg \
+  && rm yarn-v1.22.5.tar.gz.asc yarn-v1.22.5.tar.gz
 # add yarn global packages to path
 ENV PATH $PATH:$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin
 # set yarn path for global modules
