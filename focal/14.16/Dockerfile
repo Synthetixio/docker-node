@@ -1,6 +1,6 @@
 FROM buildpack-deps:focal@sha256:1c5471059bb2d81a78c470fe7565d9892a420af77c08073d7bb25a6e110f1edb
 
-ENV NODE_VERSION 14.16.0
+ENV NODE_VERSION 14.16.1
 
 ############### env setup ###############
 # always behave as CI
