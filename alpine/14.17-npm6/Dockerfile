@@ -1,6 +1,6 @@
 FROM alpine:3.12@sha256:a9c28c813336ece5bb98b36af5b66209ed777a394f4f856c6e62267790883820
 
-ENV NODE_VERSION 14.16.1
+ENV NODE_VERSION 14.17.0
 
 ############### env setup ###############
 # always behave as CI
@@ -65,7 +65,7 @@ RUN ARCH= && alpineArch="$(apk --print-arch)" \
       && case "${alpineArch##*-}" in \
         x86_64) \
           ARCH='x64' \
-          CHECKSUM="39fbbd09668472f1105bdb5a7c20675bd91649543d2bc25b6edc1293835661f1" \
+          CHECKSUM="019a8cae26a0ab9a8dc1264c2e1f11ad659e2093716263bb470f02189856b0a4" \
           ;; \
         *) ;; \
       esac \
@@ -119,10 +119,6 @@ ENV NPM_CONFIG_PREFIX $HOME/.npm-global
 ENV PATH $PATH:$HOME/.npm-global/bin
 # should be root user
 RUN npm config -g set user root
-# install latest npm, regardless of node version, for speed and fixes
-RUN npm install -g npm@7.12.0
-# remove old npm
-RUN rm $HOME/bin/npm
 # create folders for npm doctor
 RUN mkdir $HOME/node_modules
 RUN mkdir $HOME/node_modules/.bin
@@ -153,7 +149,7 @@ ENV PATH $PATH:$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin
 RUN yarn config set prefix $HOME/.yarn
 
 ############### wrapping up ###############
-COPY docker-entrypoint.sh $HOME/bin/
+COPY docker-entrypoint.sh /usr/local/bin/
 ENTRYPOINT ["docker-entrypoint.sh"]
 WORKDIR $PROJECT
 # print versions of local tools
