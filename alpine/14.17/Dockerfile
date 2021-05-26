@@ -2,9 +2,9 @@ FROM alpine:3.12@sha256:a9c28c813336ece5bb98b36af5b66209ed777a394f4f856c6e622677
 
 ENV NODE_VERSION 14.17.0
 ENV YARN_VERSION 1.22.5
+ENV NPM_VERSION 7.14.0
 
 ############### env setup ###############
-# USER root
 # always behave as CI
 ENV CI true
 # disable next.js telemetry
@@ -14,17 +14,6 @@ ENV DEBIAN_FRONTEND noninteractive
 ENV DEBCONF_NONINTERACTIVE_SEEN true
 # good colors for most applications
 ENV TERM xterm
-# set home and project dirs
-# ENV HOME /root
-# ENV PROJECT $HOME/project
-# create project dir
-# RUN mkdir -p $PROJECT
-# create local bin dir
-# RUN mkdir -p $HOME/bin
-# add local bin dir to path
-# ENV PATH $PATH:$HOME/bin
-# work in local home dir
-# WORKDIR $HOME
 
 # install deps
 RUN apk add --no-cache \
@@ -112,26 +101,18 @@ RUN ARCH= && alpineArch="$(apk --print-arch)" \
     && rm "node-v$NODE_VERSION.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt; \
   fi \
   && rm -f "node-v$NODE_VERSION-linux-$ARCH-musl.tar.xz"
+
 # avoid million NPM install messages
 ENV npm_config_loglevel warn
+
 # allow installing when the main user is root
-# ENV npm_config_unsafe_perm true
-# set npm path for global modules
-# ENV NPM_CONFIG_PREFIX $HOME/.npm-global
-# add npm global packages to path
-# ENV PATH $PATH:$HOME/.npm-global/bin
+ENV npm_config_unsafe_perm true
+
 # should be root user
-# RUN npm config -g set user root
+RUN npm config -g set user root
+
 # install latest npm, regardless of node version, for speed and fixes
-RUN npm install -g npm@7.14.0
-# remove old npm
-# RUN rm $HOME/bin/npm
-# create folders for npm doctor
-# RUN mkdir $HOME/node_modules
-# RUN mkdir $HOME/node_modules/.bin
-# verify npm works
-# disabled due to required update to node LTS
-# RUN npm doctor
+RUN npm install -g npm@$NPM_VERSION
 
 RUN node --version
 RUN npm --version
@@ -153,15 +134,10 @@ RUN for key in \
   && ln -s /opt/yarn-v$YARN_VERSION/bin/yarn /usr/local/bin/yarn \
   && ln -s /opt/yarn-v$YARN_VERSION/bin/yarnpkg /usr/local/bin/yarnpkg \
   && rm yarn-v$YARN_VERSION.tar.gz.asc yarn-v$YARN_VERSION.tar.gz
-# add yarn global packages to path
-# ENV PATH $PATH:$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin
-# set yarn path for global modules
-# RUN yarn config set prefix $HOME/.yarn
 
 RUN yarn --version
 
 ############### wrapping up ###############
 COPY docker-entrypoint.sh /usr/local/bin/
 ENTRYPOINT ["docker-entrypoint.sh"]
-# WORKDIR $PROJECT
 CMD ["node"]
