@@ -1,6 +1,8 @@
 FROM buildpack-deps:focal@sha256:1c5471059bb2d81a78c470fe7565d9892a420af77c08073d7bb25a6e110f1edb
 
 ENV NODE_VERSION 14.17.0
+ENV YARN_VERSION 1.22.5
+ENV NPM_VERSION 7.14.0
 
 ############### env setup ###############
 # always behave as CI
@@ -12,17 +14,6 @@ ENV DEBIAN_FRONTEND noninteractive
 ENV DEBCONF_NONINTERACTIVE_SEEN true
 # good colors for most applications
 ENV TERM xterm
-# set home and project dirs
-ENV HOME /root
-ENV PROJECT $HOME/project
-# create project dir
-RUN mkdir -p $PROJECT
-# create local bin dir
-RUN mkdir -p $HOME/bin
-# add local bin dir to path
-ENV PATH $PATH:$HOME/bin
-# work in local home dir
-WORKDIR $HOME
 
 ############### python setup ###############
 # install pip
@@ -34,7 +25,7 @@ RUN apt-get update && \
   python3-dev \
   && rm -rf /var/lib/apt/lists/*
 # add local python dir to path
-ENV PATH $PATH:$HOME/.local/bin
+ENV PATH $PATH:/root/.local/bin
 # install slither
 RUN pip3 install --user slither-analyzer
 
@@ -42,6 +33,7 @@ RUN pip3 install --user slither-analyzer
 # create new node user
 RUN groupadd --gid 1000 node \
   && useradd --uid 1000 --gid node --shell /bin/bash --create-home node
+
 # install node
 RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
   && case "${dpkgArch##*-}" in \
@@ -76,32 +68,26 @@ RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
   && curl -fsSLO --compressed "https://nodejs.org/dist/v$NODE_VERSION/SHASUMS256.txt.asc" \
   && gpg --batch --decrypt --output SHASUMS256.txt SHASUMS256.txt.asc \
   && grep " node-v$NODE_VERSION-linux-$ARCH.tar.xz\$" SHASUMS256.txt | sha256sum -c - \
-  && tar -xJf "node-v$NODE_VERSION-linux-$ARCH.tar.xz" -C $HOME --strip-components=1 --no-same-owner \
+  && tar -xJf "node-v$NODE_VERSION-linux-$ARCH.tar.xz" -C /usr/local --strip-components=1 --no-same-owner \
   && rm "node-v$NODE_VERSION-linux-$ARCH.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt \
-  && ln -s $HOME/bin/node $HOME/bin/nodejs
+  && ln -s /usr/local/bin/node /usr/local/bin/nodejs
+
 # avoid million NPM install messages
 ENV npm_config_loglevel warn
+
 # allow installing when the main user is root
 ENV npm_config_unsafe_perm true
-# set npm path for global modules
-ENV NPM_CONFIG_PREFIX $HOME/.npm-global
-# add npm global packages to path
-ENV PATH $PATH:$HOME/.npm-global/bin
+
 # should be root user
 RUN npm config -g set user root
+
 # install latest npm, regardless of node version, for speed and fixes
-RUN npm install -g npm@7.14.0
-# remove old npm
-RUN rm $HOME/bin/npm
-# create folders for npm doctor
-RUN mkdir $HOME/node_modules
-RUN mkdir $HOME/node_modules/.bin
-# verify npm works
-# disabled due to required update to node LTS
-# RUN npm doctor
+RUN npm install -g npm@$NPM_VERSION
+
+RUN node --version
+RUN npm --version
 
 ############### yarn setup ###############
-# install yarn
 RUN set -ex \
   && for key in \
     6A010C5166006599AA17F08146C2130DFD2497F5 \
@@ -110,27 +96,18 @@ RUN set -ex \
     gpg --batch --keyserver hkp://ipv4.pool.sks-keyservers.net --recv-keys "$key" || \
     gpg --batch --keyserver hkp://pgp.mit.edu:80 --recv-keys "$key" ; \
   done \
-  && curl -fsSLO --compressed "https://yarnpkg.com/downloads/1.22.5/yarn-v1.22.5.tar.gz" \
-  && curl -fsSLO --compressed "https://yarnpkg.com/downloads/1.22.5/yarn-v1.22.5.tar.gz.asc" \
-  && gpg --batch --verify yarn-v1.22.5.tar.gz.asc yarn-v1.22.5.tar.gz \
-  && tar -xzf yarn-v1.22.5.tar.gz -C $HOME \
-  && ln -s $HOME/yarn-v1.22.5/bin/yarn $HOME/bin/yarn \
-  && ln -s $HOME/yarn-v1.22.5/bin/yarnpkg $HOME/bin/yarnpkg \
-  && rm yarn-v1.22.5.tar.gz.asc yarn-v1.22.5.tar.gz
-# add yarn global packages to path
-ENV PATH $PATH:$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin
-# set yarn path for global modules
-RUN yarn config set prefix $HOME/.yarn
+  && curl -fsSLO --compressed "https://yarnpkg.com/downloads/$YARN_VERSION/yarn-v$YARN_VERSION.tar.gz" \
+  && curl -fsSLO --compressed "https://yarnpkg.com/downloads/$YARN_VERSION/yarn-v$YARN_VERSION.tar.gz.asc" \
+  && gpg --batch --verify yarn-v$YARN_VERSION.tar.gz.asc yarn-v$YARN_VERSION.tar.gz \
+  && mkdir -p /opt \
+  && tar -xzf yarn-v$YARN_VERSION.tar.gz -C /opt/ \
+  && ln -s /opt/yarn-v$YARN_VERSION/bin/yarn /usr/local/bin/yarn \
+  && ln -s /opt/yarn-v$YARN_VERSION/bin/yarnpkg /usr/local/bin/yarnpkg \
+  && rm yarn-v$YARN_VERSION.tar.gz.asc yarn-v$YARN_VERSION.tar.gz
+
+RUN yarn --version
 
 ############### wrapping up ###############
-COPY docker-entrypoint.sh $HOME/bin/
+COPY docker-entrypoint.sh /usr/local/bin/
 ENTRYPOINT ["docker-entrypoint.sh"]
-WORKDIR $PROJECT
-# print versions of local tools
-RUN echo "node version:  $(node -v) \n" \
-  "npm version:           $(npm -v) \n" \
-  "yarn version:          $(yarn -v) \n" \
-  "git version:           $(git --version) \n" \
-  "user:                  $(whoami) \n" \
-  "ubuntu version:        $(cat /etc/lsb-release)"
 CMD ["node"]
