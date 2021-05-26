@@ -1,4 +1,4 @@
-FROM alpine:3.13@sha256:def822f9851ca422481ec6fee59a9966f12b351c62ccb9aca841526ffaa9f748
+FROM alpine:3.12@sha256:a9c28c813336ece5bb98b36af5b66209ed777a394f4f856c6e62267790883820
 
 ENV NODE_VERSION 14.17.0
 ENV YARN_VERSION 1.22.5
@@ -44,6 +44,7 @@ RUN apk add --no-cache \
         gnupg \
         libgcc \
         linux-headers \
+        tar \
         # # mozjpeg dependencies
         autoconf \
         automake \
