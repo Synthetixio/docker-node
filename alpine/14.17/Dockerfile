@@ -118,7 +118,6 @@ RUN node --version
 RUN npm --version
 
 ############### yarn setup ###############
-# install yarn
 RUN for key in \
     6A010C5166006599AA17F08146C2130DFD2497F5 \
   ; do \
