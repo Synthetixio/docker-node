@@ -1,8 +1,10 @@
-FROM alpine:3.12@sha256:a9c28c813336ece5bb98b36af5b66209ed777a394f4f856c6e62267790883820
+FROM alpine:3.13@sha256:def822f9851ca422481ec6fee59a9966f12b351c62ccb9aca841526ffaa9f748
 
 ENV NODE_VERSION 14.17.0
+ENV YARN_VERSION 1.22.5
 
 ############### env setup ###############
+# USER root
 # always behave as CI
 ENV CI true
 # disable next.js telemetry
@@ -13,16 +15,16 @@ ENV DEBCONF_NONINTERACTIVE_SEEN true
 # good colors for most applications
 ENV TERM xterm
 # set home and project dirs
-ENV HOME /root
-ENV PROJECT $HOME/project
+# ENV HOME /root
+# ENV PROJECT $HOME/project
 # create project dir
-RUN mkdir -p $PROJECT
+# RUN mkdir -p $PROJECT
 # create local bin dir
-RUN mkdir -p $HOME/bin
+# RUN mkdir -p $HOME/bin
 # add local bin dir to path
-ENV PATH $PATH:$HOME/bin
+# ENV PATH $PATH:$HOME/bin
 # work in local home dir
-WORKDIR $HOME
+# WORKDIR $HOME
 
 # install deps
 RUN apk add --no-cache \
@@ -42,8 +44,7 @@ RUN apk add --no-cache \
         gnupg \
         libgcc \
         linux-headers \
-        tar \
-        # mozjpeg dependencies
+        # # mozjpeg dependencies
         autoconf \
         automake \
         libtool \
@@ -58,8 +59,9 @@ RUN apk add --no-cache \
 
 ############### node setup ###############
 # create new node user
-# RUN addgroup -g 1000 node \
-#     && adduser -u 1000 -G node -s /bin/sh -D node
+RUN addgroup -g 1000 node \
+    && adduser -u 1000 -G node -s /bin/sh -D node
+
 # install node
 RUN ARCH= && alpineArch="$(apk --print-arch)" \
       && case "${alpineArch##*-}" in \
@@ -73,8 +75,8 @@ RUN ARCH= && alpineArch="$(apk --print-arch)" \
     set -eu; \
     curl -fsSLO --compressed "https://unofficial-builds.nodejs.org/download/release/v$NODE_VERSION/node-v$NODE_VERSION-linux-$ARCH-musl.tar.xz"; \
     echo "$CHECKSUM  node-v$NODE_VERSION-linux-$ARCH-musl.tar.xz" | sha256sum -c - \
-      && tar -xJf "node-v$NODE_VERSION-linux-$ARCH-musl.tar.xz" -C $HOME --strip-components=1 --no-same-owner \
-      && ln -s $HOME/bin/node $HOME/bin/nodejs; \
+      && tar -xJf "node-v$NODE_VERSION-linux-$ARCH-musl.tar.xz" -C /usr/local --strip-components=1 --no-same-owner \
+      && ln -s /usr/local/bin/node /usr/local/bin/nodejs; \
   else \
     echo "Building from source" \
     # gpg keys listed at https://github.com/nodejs/node#release-keys
@@ -112,23 +114,26 @@ RUN ARCH= && alpineArch="$(apk --print-arch)" \
 # avoid million NPM install messages
 ENV npm_config_loglevel warn
 # allow installing when the main user is root
-ENV npm_config_unsafe_perm true
+# ENV npm_config_unsafe_perm true
 # set npm path for global modules
 # ENV NPM_CONFIG_PREFIX $HOME/.npm-global
 # add npm global packages to path
 # ENV PATH $PATH:$HOME/.npm-global/bin
 # should be root user
-RUN npm config -g set user root
+# RUN npm config -g set user root
 # install latest npm, regardless of node version, for speed and fixes
 RUN npm install -g npm@7.14.0
 # remove old npm
 # RUN rm $HOME/bin/npm
 # create folders for npm doctor
-RUN mkdir $HOME/node_modules
-RUN mkdir $HOME/node_modules/.bin
+# RUN mkdir $HOME/node_modules
+# RUN mkdir $HOME/node_modules/.bin
 # verify npm works
 # disabled due to required update to node LTS
-RUN npm doctor
+# RUN npm doctor
+
+RUN node --version
+RUN npm --version
 
 ############### yarn setup ###############
 # install yarn
@@ -139,21 +144,23 @@ RUN for key in \
     gpg --batch --keyserver hkp://ipv4.pool.sks-keyservers.net --recv-keys "$key" || \
     gpg --batch --keyserver hkp://pgp.mit.edu:80 --recv-keys "$key" ; \
   done \
-  && curl -fsSLO --compressed "https://yarnpkg.com/downloads/1.22.5/yarn-v1.22.5.tar.gz" \
-  && curl -fsSLO --compressed "https://yarnpkg.com/downloads/1.22.5/yarn-v1.22.5.tar.gz.asc" \
-  && gpg --batch --verify yarn-v1.22.5.tar.gz.asc yarn-v1.22.5.tar.gz \
-  && mkdir -p $HOME \
-  && tar -xzf yarn-v1.22.5.tar.gz -C $HOME \
-  && ln -s $HOME/yarn-v1.22.5/bin/yarn $HOME/bin/yarn \
-  && ln -s $HOME/yarn-v1.22.5/bin/yarnpkg $HOME/bin/yarnpkg \
-  && rm yarn-v1.22.5.tar.gz.asc yarn-v1.22.5.tar.gz
+  && curl -fsSLO --compressed "https://yarnpkg.com/downloads/$YARN_VERSION/yarn-v$YARN_VERSION.tar.gz" \
+  && curl -fsSLO --compressed "https://yarnpkg.com/downloads/$YARN_VERSION/yarn-v$YARN_VERSION.tar.gz.asc" \
+  && gpg --batch --verify yarn-v$YARN_VERSION.tar.gz.asc yarn-v$YARN_VERSION.tar.gz \
+  && mkdir -p /opt \
+  && tar -xzf yarn-v$YARN_VERSION.tar.gz -C /opt/ \
+  && ln -s /opt/yarn-v$YARN_VERSION/bin/yarn /usr/local/bin/yarn \
+  && ln -s /opt/yarn-v$YARN_VERSION/bin/yarnpkg /usr/local/bin/yarnpkg \
+  && rm yarn-v$YARN_VERSION.tar.gz.asc yarn-v$YARN_VERSION.tar.gz
 # add yarn global packages to path
-ENV PATH $PATH:$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin
+# ENV PATH $PATH:$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin
 # set yarn path for global modules
-RUN yarn config set prefix $HOME/.yarn
+# RUN yarn config set prefix $HOME/.yarn
+
+RUN yarn --version
 
 ############### wrapping up ###############
 COPY docker-entrypoint.sh /usr/local/bin/
 ENTRYPOINT ["docker-entrypoint.sh"]
-WORKDIR $PROJECT
+# WORKDIR $PROJECT
 CMD ["node"]
