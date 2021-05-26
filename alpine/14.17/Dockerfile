@@ -58,8 +58,8 @@ RUN apk add --no-cache \
 
 ############### node setup ###############
 # create new node user
-RUN addgroup -g 1000 node \
-    && adduser -u 1000 -G node -s /bin/sh -D node
+# RUN addgroup -g 1000 node \
+#     && adduser -u 1000 -G node -s /bin/sh -D node
 # install node
 RUN ARCH= && alpineArch="$(apk --print-arch)" \
       && case "${alpineArch##*-}" in \
@@ -114,21 +114,21 @@ ENV npm_config_loglevel warn
 # allow installing when the main user is root
 ENV npm_config_unsafe_perm true
 # set npm path for global modules
-ENV NPM_CONFIG_PREFIX $HOME/.npm-global
+# ENV NPM_CONFIG_PREFIX $HOME/.npm-global
 # add npm global packages to path
-ENV PATH $PATH:$HOME/.npm-global/bin
+# ENV PATH $PATH:$HOME/.npm-global/bin
 # should be root user
 RUN npm config -g set user root
 # install latest npm, regardless of node version, for speed and fixes
 RUN npm install -g npm@7.14.0
 # remove old npm
-RUN rm $HOME/bin/npm
+# RUN rm $HOME/bin/npm
 # create folders for npm doctor
 RUN mkdir $HOME/node_modules
 RUN mkdir $HOME/node_modules/.bin
 # verify npm works
 # disabled due to required update to node LTS
-# RUN npm doctor
+RUN npm doctor
 
 ############### yarn setup ###############
 # install yarn
@@ -156,10 +156,4 @@ RUN yarn config set prefix $HOME/.yarn
 COPY docker-entrypoint.sh /usr/local/bin/
 ENTRYPOINT ["docker-entrypoint.sh"]
 WORKDIR $PROJECT
-# print versions of local tools
-RUN echo "node version:  $(node -v) \n" \
-  "npm version:           $(npm -v) \n" \
-  "yarn version:          $(yarn -v) \n" \
-  "git version:           $(git --version) \n" \
-  "user:                  $(whoami) \n"
 CMD ["node"]
