@@ -1,4 +1,4 @@
-FROM buildpack-deps:focal@sha256:1c5471059bb2d81a78c470fe7565d9892a420af77c08073d7bb25a6e110f1edb
+FROM debian:stable-slim@sha256:463cabea60abc361ab670570fe30549a6531cd9af4a1b8577b1c93e9b5a1d369
 
 ENV NODE_VERSION 14.17.0
 ENV YARN_VERSION 1.22.5
@@ -75,11 +75,11 @@ RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
 # avoid million NPM install messages
 ENV npm_config_loglevel warn
 
-# allow installing when the main user is root
-ENV npm_config_unsafe_perm true
+# # allow installing when the main user is root
+# ENV npm_config_unsafe_perm true
 
-# should be root user
-RUN npm config -g set user root
+# # should be root user
+# RUN npm config -g set user root
 
 # install latest npm, regardless of node version, for speed and fixes
 RUN npm install -g npm@$NPM_VERSION
