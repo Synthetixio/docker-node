@@ -136,6 +136,6 @@ RUN for key in \
 RUN yarn --version
 
 ############### wrapping up ###############
-# COPY docker-entrypoint.sh /usr/local/bin/
-# ENTRYPOINT ["docker-entrypoint.sh"]
-# CMD ["node"]
+COPY docker-entrypoint.sh /usr/local/bin/
+ENTRYPOINT ["docker-entrypoint.sh"]
+CMD ["node"]
