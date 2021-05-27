@@ -17,7 +17,6 @@ ENV TERM xterm
 
 # install deps
 RUN apk add --no-cache \
-        bash \
         python3 \
         libstdc++ \
         git \
@@ -105,12 +104,6 @@ RUN ARCH= && alpineArch="$(apk --print-arch)" \
 # avoid million NPM install messages
 ENV npm_config_loglevel warn
 
-# allow installing when the main user is root
-ENV npm_config_unsafe_perm true
-
-# should be root user
-RUN npm config -g set user root
-
 # install latest npm, regardless of node version, for speed and fixes
 RUN npm install -g npm@$NPM_VERSION
 
@@ -138,5 +131,7 @@ RUN yarn --version
 
 ############### wrapping up ###############
 COPY docker-entrypoint.sh /usr/local/bin/
+USER node
+WORKDIR /home/node
 ENTRYPOINT ["docker-entrypoint.sh"]
 CMD ["node"]
