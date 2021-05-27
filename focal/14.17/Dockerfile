@@ -1,4 +1,4 @@
-FROM debian:stable-slim@sha256:463cabea60abc361ab670570fe30549a6531cd9af4a1b8577b1c93e9b5a1d369
+FROM debian:stable@sha256:f0bbbb17bb1f3204ba6a37e28a2d6ec70aa6a6d96e45aae8b0aabe2b93131963
 
 ENV NODE_VERSION 14.17.0
 ENV YARN_VERSION 1.22.5
