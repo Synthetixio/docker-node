@@ -15,14 +15,6 @@ ENV DEBCONF_NONINTERACTIVE_SEEN true
 # good colors for most applications
 ENV TERM xterm
 
-ENV HOME /github/home
-ENV PROJECT /root/project
-RUN mkdir -p $HOME
-RUN mkdir -p $PROJECT
-RUN mkdir -p /__w/_actions
-RUN mkdir -p /__w/_temp
-RUN mkdir -p /github/workflow
-
 # install deps
 RUN apk add --no-cache \
         bash \
@@ -57,8 +49,8 @@ RUN apk add --no-cache \
 
 ############### node setup ###############
 # create new node user
-# RUN addgroup -g 1000 node \
-#     && adduser -u 1000 -G node -s /bin/sh -D node
+RUN addgroup -g 1000 node \
+    && adduser -u 1000 -G node -s /bin/sh -D node
 
 # install node
 RUN ARCH= && alpineArch="$(apk --print-arch)" \
@@ -145,8 +137,6 @@ RUN for key in \
 RUN yarn --version
 
 ############### wrapping up ###############
-WORKDIR $PROJECT
-USER root
 COPY docker-entrypoint.sh /usr/local/bin/
 ENTRYPOINT ["docker-entrypoint.sh"]
 CMD ["node"]
