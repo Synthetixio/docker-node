@@ -15,8 +15,15 @@ ENV DEBCONF_NONINTERACTIVE_SEEN true
 # good colors for most applications
 ENV TERM xterm
 
+ENV HOME /root
 ENV PROJECT /root/project
-RUN mkdir -p $PROJECT
+# HOME=/github/home
+# RUN mkdir -p $PROJECT
+# RUN mkdir -p /__w/_actions
+# /__w/_temp
+# RUN mkdir -p /github/home
+# /github/workflow
+
 
 # install deps
 RUN apk add --no-cache \
