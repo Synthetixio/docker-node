@@ -15,6 +15,9 @@ ENV DEBCONF_NONINTERACTIVE_SEEN true
 # good colors for most applications
 ENV TERM xterm
 
+ENV PROJECT /root/project
+RUN mkdir -p $PROJECT
+
 # install deps
 RUN apk add --no-cache \
         bash \
@@ -137,6 +140,7 @@ RUN for key in \
 RUN yarn --version
 
 ############### wrapping up ###############
+WORKDIR $PROJECT
 COPY docker-entrypoint.sh /usr/local/bin/
 ENTRYPOINT ["docker-entrypoint.sh"]
 CMD ["node"]
