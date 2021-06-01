@@ -111,7 +111,7 @@ ENV npm_config_loglevel warn
 # RUN npm config -g set user root
 
 # install latest npm, regardless of node version, for speed and fixes
-# RUN npm install -g npm@$NPM_VERSION
+RUN npm install -g npm@$NPM_VERSION
 
 RUN node --version
 RUN npm --version
