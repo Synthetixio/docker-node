@@ -2,7 +2,7 @@ FROM debian:stable-slim@sha256:463cabea60abc361ab670570fe30549a6531cd9af4a1b8577
 
 ENV NODE_VERSION 14.17.0
 ENV YARN_VERSION 1.22.5
-ENV NPM_VERSION 7.15.1
+ENV NPM_VERSION 7.16.0
 
 RUN apt-get update && \
   apt-get install -y \
