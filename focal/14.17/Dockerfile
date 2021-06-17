@@ -4,6 +4,10 @@ ENV NODE_VERSION 14.17.1
 ENV YARN_VERSION 1.22.5
 ENV NPM_VERSION 7.17.0
 
+# husky workaround - https://github.com/typicode/husky/issues/821
+ENV HUSKY 0
+ENV HUSKY_SKIP_INSTALL 1
+
 RUN apt-get update && \
   apt-get install -y \
   curl \

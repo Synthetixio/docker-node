@@ -15,6 +15,10 @@ ENV DEBCONF_NONINTERACTIVE_SEEN true
 # good colors for most applications
 ENV TERM xterm
 
+# husky workaround - https://github.com/typicode/husky/issues/821
+ENV HUSKY 0
+ENV HUSKY_SKIP_INSTALL 1
+
 # install deps
 RUN apk add --no-cache \
         python3 \
