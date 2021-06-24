@@ -2,7 +2,7 @@ FROM alpine:3.12@sha256:a9c28c813336ece5bb98b36af5b66209ed777a394f4f856c6e622677
 
 ENV NODE_VERSION 14.17.1
 ENV YARN_VERSION 1.22.5
-ENV NPM_VERSION 7.17.0
+ENV NPM_VERSION 7.18.1
 
 ############### env setup ###############
 # always behave as CI

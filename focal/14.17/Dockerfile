@@ -2,7 +2,7 @@ FROM debian:stable-slim@sha256:463cabea60abc361ab670570fe30549a6531cd9af4a1b8577
 
 ENV NODE_VERSION 14.17.1
 ENV YARN_VERSION 1.22.5
-ENV NPM_VERSION 7.17.0
+ENV NPM_VERSION 7.18.1
 
 # husky workaround - https://github.com/typicode/husky/issues/821
 ENV HUSKY 0
