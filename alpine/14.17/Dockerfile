@@ -116,9 +116,12 @@ ENV npm_config_loglevel warn
 
 # install latest npm, regardless of node version, for speed and fixes
 # RUN npm install -g npm@$NPM_VERSION
-RUN npm i -g npm@$NPM_VERSION
-# RUN npm update -g
+# RUN npm i -g npm@$NPM_VERSION
+RUN npm update -g
 # RUN npm install --global npm
+# RUN curl https://www.npmjs.com/install.sh | sh
+# RUN sudo chown -R [username] ~/.npm
+# npm i -g npm-upgrade
 RUN node --version
 RUN npm --version
 
