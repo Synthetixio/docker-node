@@ -52,8 +52,8 @@ RUN apk add --no-cache \
 
 ############### node setup ###############
 # create new node user
-RUN addgroup -g 1000 node \
-    && adduser -u 1000 -G node -s /bin/sh -D node
+# RUN addgroup -g 1000 node \
+#     && adduser -u 1000 -G node -s /bin/sh -D node
 
 # install node
 RUN ARCH= && alpineArch="$(apk --print-arch)" \
@@ -115,9 +115,8 @@ ENV npm_config_loglevel warn
 # RUN npm config -g set user root
 
 # install latest npm, regardless of node version, for speed and fixes
-# RUN npm install -g npm@$NPM_VERSION
+RUN npm install -g npm@$NPM_VERSION
 # RUN npm i -g npm@$NPM_VERSION
-RUN npm update -g
 # RUN npm install --global npm
 # RUN curl https://www.npmjs.com/install.sh | sh
 # RUN sudo chown -R [username] ~/.npm

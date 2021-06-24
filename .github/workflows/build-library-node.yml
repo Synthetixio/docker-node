@@ -13,8 +13,8 @@ jobs:
   build_and_push:
     strategy:
       matrix:
-        node: [ '14.17' ]
-        distro: [ 'debian-nvm' ]
+        node: [ '12.22', '12.22-npm6', '14.17', '14.17-npm6', '15.11']
+        distro: [ focal, alpine ]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
