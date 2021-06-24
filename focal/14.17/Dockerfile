@@ -60,8 +60,8 @@ RUN pip3 install --user slither-analyzer
 
 ############### node setup ###############
 # create new node user
-# RUN groupadd --gid 1000 node \
-#   && useradd --uid 1000 --gid node --shell /bin/bash --create-home node
+RUN groupadd --gid 1000 node \
+  && useradd --uid 1000 --gid node --shell /bin/bash --create-home node
 
 # install node
 RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
@@ -111,33 +111,30 @@ ENV npm_config_loglevel warn
 # RUN npm config -g set user root
 
 # install latest npm, regardless of node version, for speed and fixes
-# RUN npm install -g npm@$NPM_VERSION
-
-RUN npm i -g npm@$NPM_VERSION
-# RUN npm install --global npm
+RUN npm install -g npm@$NPM_VERSION
 
 RUN node --version
 RUN npm --version
 
 ############### yarn setup ###############
-# RUN set -ex \
-#   && for key in \
-#   6A010C5166006599AA17F08146C2130DFD2497F5 \
-#   ; do \
-#   gpg --batch --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys "$key" || \
-#   gpg --batch --keyserver hkp://ipv4.pool.sks-keyservers.net --recv-keys "$key" || \
-#   gpg --batch --keyserver hkp://pgp.mit.edu:80 --recv-keys "$key" ; \
-#   done \
-#   && curl -fsSLO --compressed "https://yarnpkg.com/downloads/$YARN_VERSION/yarn-v$YARN_VERSION.tar.gz" \
-#   && curl -fsSLO --compressed "https://yarnpkg.com/downloads/$YARN_VERSION/yarn-v$YARN_VERSION.tar.gz.asc" \
-#   && gpg --batch --verify yarn-v$YARN_VERSION.tar.gz.asc yarn-v$YARN_VERSION.tar.gz \
-#   && mkdir -p /opt \
-#   && tar -xzf yarn-v$YARN_VERSION.tar.gz -C /opt/ \
-#   && ln -s /opt/yarn-v$YARN_VERSION/bin/yarn /usr/local/bin/yarn \
-#   && ln -s /opt/yarn-v$YARN_VERSION/bin/yarnpkg /usr/local/bin/yarnpkg \
-#   && rm yarn-v$YARN_VERSION.tar.gz.asc yarn-v$YARN_VERSION.tar.gz
+RUN set -ex \
+  && for key in \
+    6A010C5166006599AA17F08146C2130DFD2497F5 \
+  ; do \
+    gpg --batch --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys "$key" || \
+    gpg --batch --keyserver hkp://ipv4.pool.sks-keyservers.net --recv-keys "$key" || \
+    gpg --batch --keyserver hkp://pgp.mit.edu:80 --recv-keys "$key" ; \
+  done \
+  && curl -fsSLO --compressed "https://yarnpkg.com/downloads/$YARN_VERSION/yarn-v$YARN_VERSION.tar.gz" \
+  && curl -fsSLO --compressed "https://yarnpkg.com/downloads/$YARN_VERSION/yarn-v$YARN_VERSION.tar.gz.asc" \
+  && gpg --batch --verify yarn-v$YARN_VERSION.tar.gz.asc yarn-v$YARN_VERSION.tar.gz \
+  && mkdir -p /opt \
+  && tar -xzf yarn-v$YARN_VERSION.tar.gz -C /opt/ \
+  && ln -s /opt/yarn-v$YARN_VERSION/bin/yarn /usr/local/bin/yarn \
+  && ln -s /opt/yarn-v$YARN_VERSION/bin/yarnpkg /usr/local/bin/yarnpkg \
+  && rm yarn-v$YARN_VERSION.tar.gz.asc yarn-v$YARN_VERSION.tar.gz
 
-# RUN yarn --version
+RUN yarn --version
 
 ############### wrapping up ###############
 COPY docker-entrypoint.sh /usr/local/bin/
