@@ -122,6 +122,8 @@ RUN npm config -g set user root
 # install latest npm, regardless of node version, for speed and fixes
 RUN curl https://www.npmjs.com/install.sh | sh
 
+RUN npm cache clean -f
+
 RUN npm --global cache verify
 
 RUN node --version
