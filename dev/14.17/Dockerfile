@@ -120,7 +120,7 @@ ENV npm_config_cache ~/.npm
 RUN npm config -g set user root
 
 # install latest npm, regardless of node version, for speed and fixes
-RUN npm install -g npm@$NPM_VERSION
+RUN curl https://www.npmjs.com/install.sh | sh
 
 RUN npm --global cache verify
 
