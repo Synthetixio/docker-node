@@ -113,6 +113,7 @@ ENV npm_config_loglevel warn
 ENV npm_config_unsafe_perm true
 
 RUN mkdir -p /github/home
+RUN mkdir -p /github/workflow
 
 ENV npm_config_cache /github/home/.npm
 
