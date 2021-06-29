@@ -112,15 +112,17 @@ ENV npm_config_loglevel warn
 # # allow installing when the main user is root
 ENV npm_config_unsafe_perm true
 
-ENV npm_config_cache /root/.npm
+RUN mkdir -p ~/.npm
+
+ENV npm_config_cache ~/.npm
 
 # # should be root user
 RUN npm config -g set user root
 
-RUN npm --global cache verify
-
 # install latest npm, regardless of node version, for speed and fixes
 RUN npm install -g npm@$NPM_VERSION
+
+RUN npm --global cache verify
 
 RUN node --version
 RUN npm --version
