@@ -55,9 +55,6 @@ RUN apk add --no-cache \
 RUN addgroup -g 1000 node \
     && adduser -u 1000 -G node -s /bin/sh -D node
 
-RUN addgroup -g 1001 github \
-    && adduser -u 121 -G github -s /bin/sh -D github
-
 # install node
 RUN ARCH= && alpineArch="$(apk --print-arch)" \
       && case "${alpineArch##*-}" in \
@@ -115,12 +112,12 @@ ENV npm_config_loglevel warn
 # # allow installing when the main user is root
 ENV npm_config_unsafe_perm true
 
-RUN mkdir -p /home/github/.npm
+RUN mkdir -p /github/home
 
-ENV npm_config_cache /home/github/.npm
+ENV npm_config_cache /github/home/.npm
 
 # # should be root user
-RUN npm config -g set user github
+RUN npm config -g set user root
 
 # install latest npm, regardless of node version, for speed and fixes
 RUN curl https://www.npmjs.com/install.sh | sh
