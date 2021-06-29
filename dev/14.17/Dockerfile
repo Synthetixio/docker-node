@@ -112,9 +112,9 @@ ENV npm_config_loglevel warn
 # # allow installing when the main user is root
 ENV npm_config_unsafe_perm true
 
-RUN mkdir -p ~/.npm
+RUN mkdir -p /root/.npm
 
-ENV npm_config_cache ~/.npm
+ENV npm_config_cache /root/.npm
 
 # # should be root user
 RUN npm config -g set user root
