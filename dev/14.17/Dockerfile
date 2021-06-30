@@ -68,6 +68,10 @@ RUN pip3 install --user slither-analyzer
 RUN groupadd --gid 1000 node \
   && useradd --uid 1000 --gid node --shell /bin/bash --create-home node
 
+USER node
+
+WORKDIR /home/node
+
 # install node
 RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
   && case "${dpkgArch##*-}" in \
@@ -103,35 +107,37 @@ RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
   && curl -fsSLO --compressed "https://nodejs.org/dist/v$NODE_VERSION/SHASUMS256.txt.asc" \
   && gpg --batch --decrypt --output SHASUMS256.txt SHASUMS256.txt.asc \
   && grep " node-v$NODE_VERSION-linux-$ARCH.tar.xz\$" SHASUMS256.txt | sha256sum -c - \
-  && tar -xJf "node-v$NODE_VERSION-linux-$ARCH.tar.xz" -C /usr/local --strip-components=1 --no-same-owner \
+  && tar -xJf "node-v$NODE_VERSION-linux-$ARCH.tar.xz" -C /home/node --strip-components=1 --no-same-owner \
   && rm "node-v$NODE_VERSION-linux-$ARCH.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt \
-  && ln -s /usr/local/bin/node /usr/local/bin/nodejs
+  && ln -s /home/node/bin/node /home/node/bin/nodejs
 
-# avoid million NPM install messages
+ENV PATH="/home/node/bin:${PATH}"
+
+# # avoid million NPM install messages
 ENV npm_config_loglevel warn
 
-# # allow installing when the main user is root
-ENV npm_config_unsafe_perm true
+# # # allow installing when the main user is root
+# ENV npm_config_unsafe_perm true
 
-RUN mkdir -p /github/home/.npm
-RUN mkdir -p /github/workflow
+# # RUN mkdir -p /github/home/.npm
+# # RUN mkdir -p /github/workflow
 
-ENV npm_config_cache /github/home/.npm
+RUN mkdir -p /home/node/node_modules/.bin
 
-# # should be root user
-RUN npm config -g set user root
+# # ENV npm_config_cache /github/home/.npm
 
-# install latest npm, regardless of node version, for speed and fixes
-RUN curl https://www.npmjs.com/install.sh | sh
+# # # # should be root user
+# # RUN npm config -g set user root
 
-RUN npm cache clean -f
+# # install latest npm, regardless of node version, for speed and fixes
+RUN npm install -g npm@latest
 
-RUN npm --global cache verify
+RUN npm doctor
 
 RUN node --version
 RUN npm --version
 
-############### wrapping up ###############
+# ############### wrapping up ###############
 COPY docker-entrypoint.sh /usr/local/bin/
 ENTRYPOINT ["docker-entrypoint.sh"]
 CMD ["node"]
