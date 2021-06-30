@@ -1,6 +1,6 @@
 FROM debian:stable-slim@sha256:463cabea60abc361ab670570fe30549a6531cd9af4a1b8577b1c93e9b5a1d369
 
-ENV NODE_VERSION 16.3.0
+ENV NODE_VERSION 14.17.1
 ENV YARN_VERSION 1.22.5
 ENV NPM_VERSION 7.19.0
 
@@ -122,7 +122,7 @@ ENV npm_config_loglevel warn
 # RUN npm config -g set user root
 
 # install latest npm, regardless of node version, for speed and fixes
-# RUN npm install -g npm@$NPM_VERSION
+RUN npm install -g npm@$NPM_VERSION
 
 # RUN npm cache clean -f
 
