@@ -2,7 +2,7 @@ FROM alpine:3.12@sha256:a9c28c813336ece5bb98b36af5b66209ed777a394f4f856c6e622677
 
 ENV NODE_VERSION 14.17.1
 ENV YARN_VERSION 1.22.5
-ENV NPM_VERSION 7.18.1
+ENV NPM_VERSION 7.19.0
 
 ############### env setup ###############
 # always behave as CI
@@ -86,6 +86,7 @@ RUN ARCH= && alpineArch="$(apk --print-arch)" \
       108F52B48DB57BB0CC439B2997B01419BD92F80A \
       B9E2F5981AA6E0CD28160D9FF13993A75599653C \
     ; do \
+      gpg --batch --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys "$key" || \
       gpg --batch --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys "$key" || \
       gpg --batch --keyserver hkp://ipv4.pool.sks-keyservers.net --recv-keys "$key" || \
       gpg --batch --keyserver hkp://pgp.mit.edu:80 --recv-keys "$key" ; \
@@ -124,6 +125,7 @@ RUN npm --version
 RUN for key in \
     6A010C5166006599AA17F08146C2130DFD2497F5 \
   ; do \
+    gpg --batch --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys "$key" || \
     gpg --batch --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys "$key" || \
     gpg --batch --keyserver hkp://ipv4.pool.sks-keyservers.net --recv-keys "$key" || \
     gpg --batch --keyserver hkp://pgp.mit.edu:80 --recv-keys "$key" ; \
