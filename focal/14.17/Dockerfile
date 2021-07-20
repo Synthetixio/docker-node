@@ -2,7 +2,7 @@ FROM buildpack-deps:focal@sha256:1c5471059bb2d81a78c470fe7565d9892a420af77c08073
 
 ENV NODE_VERSION 14.17.1
 ENV YARN_VERSION 1.22.5
-ENV NPM_VERSION 7.19.0
+ENV NPM_VERSION 7.20.0
 
 # husky workaround - https://github.com/typicode/husky/issues/821
 ENV HUSKY 0
@@ -60,8 +60,8 @@ RUN pip3 install --user slither-analyzer
 
 ############### node setup ###############
 # create new node user
-RUN groupadd --gid 1000 node \
-  && useradd --uid 1000 --gid node --shell /bin/bash --create-home node
+# RUN groupadd --gid 1000 node \
+#   && useradd --uid 1000 --gid node --shell /bin/bash --create-home node
 
 # install node
 RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
@@ -114,8 +114,8 @@ ENV npm_config_loglevel warn
 # install latest npm, regardless of node version, for speed and fixes
 RUN npm install -g npm@$NPM_VERSION
 
-RUN node --version
-RUN npm --version
+# RUN node --version
+# RUN npm --version
 
 ############### yarn setup ###############
 RUN set -ex \
@@ -136,7 +136,7 @@ RUN set -ex \
   && ln -s /opt/yarn-v$YARN_VERSION/bin/yarnpkg /usr/local/bin/yarnpkg \
   && rm yarn-v$YARN_VERSION.tar.gz.asc yarn-v$YARN_VERSION.tar.gz
 
-RUN yarn --version
+# RUN yarn --version
 
 ############### wrapping up ###############
 COPY docker-entrypoint.sh /usr/local/bin/

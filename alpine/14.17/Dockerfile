@@ -2,7 +2,7 @@ FROM alpine:3.12@sha256:a9c28c813336ece5bb98b36af5b66209ed777a394f4f856c6e622677
 
 ENV NODE_VERSION 14.17.1
 ENV YARN_VERSION 1.22.5
-ENV NPM_VERSION 7.19.0
+ENV NPM_VERSION 7.20.0
 
 ############### env setup ###############
 # always behave as CI
@@ -52,8 +52,8 @@ RUN apk add --no-cache \
 
 ############### node setup ###############
 # create new node user
-RUN addgroup -g 1000 node \
-    && adduser -u 1000 -G node -s /bin/sh -D node
+# RUN addgroup -g 1000 node \
+#     && adduser -u 1000 -G node -s /bin/sh -D node
 
 # install node
 RUN ARCH= && alpineArch="$(apk --print-arch)" \
@@ -118,8 +118,8 @@ ENV npm_config_loglevel warn
 # install latest npm, regardless of node version, for speed and fixes
 RUN npm install -g npm@$NPM_VERSION
 
-RUN node --version
-RUN npm --version
+# RUN node --version
+# RUN npm --version
 
 ############### yarn setup ###############
 RUN for key in \
@@ -139,7 +139,7 @@ RUN for key in \
   && ln -s /opt/yarn-v$YARN_VERSION/bin/yarnpkg /usr/local/bin/yarnpkg \
   && rm yarn-v$YARN_VERSION.tar.gz.asc yarn-v$YARN_VERSION.tar.gz
 
-RUN yarn --version
+# RUN yarn --version
 
 ############### wrapping up ###############
 COPY docker-entrypoint.sh /usr/local/bin/
