@@ -3,6 +3,7 @@ FROM alpine:3.12@sha256:a9c28c813336ece5bb98b36af5b66209ed777a394f4f856c6e622677
 ENV NODE_VERSION 14.17.3
 ENV YARN_VERSION 1.22.5
 ENV NPM_VERSION 7.20.0
+ENV VERCEL_VERSION 23.0.1
 
 ############### env setup ###############
 # always behave as CI
@@ -137,6 +138,8 @@ RUN for key in \
   && rm yarn-v$YARN_VERSION.tar.gz.asc yarn-v$YARN_VERSION.tar.gz
 
 # RUN yarn --version
+
+RUN npm install -g vercel@$VERCEL_VERSION
 
 ############### wrapping up ###############
 COPY docker-entrypoint.sh /usr/local/bin/
