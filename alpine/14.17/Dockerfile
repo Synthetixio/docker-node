@@ -1,4 +1,4 @@
-FROM alpine:3.14@sha256:1775bebec23e1f3ce486989bfc9ff3c4e951690df84aa9f926497d82f2ffca9d
+FROM alpine:3.12@sha256:a9c28c813336ece5bb98b36af5b66209ed777a394f4f856c6e62267790883820
 
 ENV NODE_VERSION 14.17.3
 ENV YARN_VERSION 1.22.5
@@ -32,6 +32,7 @@ RUN apk add --no-cache \
   clang \
   unzip \
   curl \
+  wget \
   binutils-gold \
   gnupg \
   libgcc \

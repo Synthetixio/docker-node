@@ -1,4 +1,4 @@
-FROM buildpack-deps:focal@sha256:1c5471059bb2d81a78c470fe7565d9892a420af77c08073d7bb25a6e110f1edb
+FROM ubuntu:focal@sha256:778fdd9f62a6d7c0e53a97489ab3db17738bc5c1acf09a18738a2a674025eae6
 
 ENV NODE_VERSION 14.17.3
 ENV YARN_VERSION 1.22.5
@@ -21,6 +21,7 @@ RUN apt-get update && \
   clang \
   unzip \
   curl \
+  wget \
   binutils-gold \
   gnupg \
   # mozjpeg dependencies
