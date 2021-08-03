@@ -26,6 +26,7 @@ RUN apt-get update && \
   wget \
   binutils-gold \
   gnupg \
+  proot \
   # mozjpeg dependencies
   autoconf \
   automake \
@@ -112,14 +113,19 @@ ENV npm_config_loglevel warn
 # # allow installing when the main user is root
 # ENV npm_config_unsafe_perm true
 
+RUN npm config set unsafe-perm=true
+
 # # should be root user
 # RUN npm config -g set user root
 
 # install latest npm, regardless of node version, for speed and fixes
 RUN npm install -g npm@$NPM_VERSION
-
-RUN npm cache clean --force --unsafe-perm
+# RUN proot --link2symlink npm i -g npm@$NPM_VERSION
+# //--no-bin-links
+RUN npm cache clean --force
 RUN chown -R $(whoami) ~/.npm
+RUN chown -R $(whoami) /usr/local
+# RUN chown -R $(whoami) /usr/local/lib/node_modules
 
 RUN mkdir ~/.npm-global
 RUN npm config set prefix '~/.npm-global'
