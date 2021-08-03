@@ -118,6 +118,14 @@ ENV npm_config_loglevel warn
 # install latest npm, regardless of node version, for speed and fixes
 RUN npm install -g npm@$NPM_VERSION
 
+RUN npm cache clean --force --unsafe-perm
+RUN chown -R $(whoami) ~/.npm
+
+RUN mkdir ~/.npm-global
+RUN npm config set prefix '~/.npm-global'
+ENV PATH $PATH:~/.npm-global/bin
+ENV NPM_CONFIG_PREFIX ~/.npm-global
+
 # RUN node --version
 # RUN npm --version
 
