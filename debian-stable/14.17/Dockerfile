@@ -117,8 +117,6 @@ ENV npm_config_loglevel warn
 
 # install latest npm, regardless of node version, for speed and fixes
 RUN npm install -g npm@$NPM_VERSION
-RUN npm install -g npx@10.2.2 --force
-RUN npm install -g node@14.17.4 --force
 
 # RUN node --version
 # RUN npm --version
