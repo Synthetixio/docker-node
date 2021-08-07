@@ -4,8 +4,8 @@ on:
   push:
     branches: [ master ]
     paths:
-      - '**'
-      - versions.json
+      - 'output/**'
+      - config.json
       - docker-entrypoint.sh
       - '.github/workflows/build-library-node.yml'
 
@@ -13,8 +13,8 @@ jobs:
   build_and_push:
     strategy:
       matrix:
-        node: [ '14.17']
-        distro: [ debian-stable ]
+        node: [ '12.22', '14.17', '16.6']
+        distro: [ alpine, debian, ubuntu ]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -52,7 +52,7 @@ jobs:
         uses: docker/build-push-action@1bc1040caef9e604eb543693ba89b5bf4fc80935 # pin@v2
         with:
           context: .
-          file: ./${{ matrix.distro }}/${{ matrix.node }}/Dockerfile
+          file: ./output/${{ matrix.distro }}/${{ matrix.node }}/Dockerfile
           platforms: linux/amd64
           push: true
           tags: |
