@@ -53,8 +53,6 @@ RUN apk add --no-cache \
     binutils-gold \
     gnupg \
     && echo "Finished installing packages"
-# install slither
-RUN pip3 install --user slither-analyzer
 
 ############### NODE SETUP ###############
 # create new node user
