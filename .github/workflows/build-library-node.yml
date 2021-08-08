@@ -5,7 +5,6 @@ on:
     branches: [ master ]
     paths:
       - 'output/**'
-      - config.json
       - docker-entrypoint.sh
       - '.github/workflows/build-library-node.yml'
 
