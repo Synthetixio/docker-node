@@ -49,7 +49,7 @@ RUN apt-get update && \
     wget \
     binutils-gold \
     gnupg \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* /var/cache/apt/*
 # locale setup
 RUN localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8
 ENV LANG en_US.utf8

@@ -70,7 +70,7 @@ RUN apt-get update && \
     binutils-gold \
     gnupg \
 {%- if distro === "ubuntu" or distro === "debian" %}
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* /var/cache/apt/*
 {%- else %}
     && echo "Finished installing packages"
 {%- endif %}
