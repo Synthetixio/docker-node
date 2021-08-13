@@ -2,9 +2,9 @@
 FROM debian:stable-slim@sha256:fba32ef7f7031ed7beba08f6fd386e5dfcba08926ce76ea80929bc012c064f26
 
 ENV NODE_VERSION 12.22.4
-ENV YARN_VERSION 1.22.5
-ENV NPM_VERSION 7.20.5
-ENV VERCEL_VERSION 23.1.1
+ENV YARN_VERSION 1.22.11
+ENV NPM_VERSION 7.20.6
+ENV VERCEL_VERSION 23.1.2
 
 ############### ENV SETUP ###############
 # husky workaround - https://github.com/typicode/husky/issues/821

@@ -2,9 +2,9 @@
 FROM ubuntu:focal@sha256:1e48201ccc2ab83afc435394b3bf70af0fa0055215c1e26a5da9b50a1ae367c9
 
 ENV NODE_VERSION 12.22.4
-ENV YARN_VERSION 1.22.5
-ENV NPM_VERSION 7.20.5
-ENV VERCEL_VERSION 23.1.1
+ENV YARN_VERSION 1.22.11
+ENV NPM_VERSION 7.20.6
+ENV VERCEL_VERSION 23.1.2
 
 ############### ENV SETUP ###############
 # husky workaround - https://github.com/typicode/husky/issues/821
