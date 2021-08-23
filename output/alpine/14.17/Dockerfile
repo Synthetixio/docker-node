@@ -1,9 +1,9 @@
 
 FROM alpine:3.12@sha256:a9c28c813336ece5bb98b36af5b66209ed777a394f4f856c6e62267790883820
 
-ENV NODE_VERSION 14.17.4
+ENV NODE_VERSION 14.17.5
 ENV YARN_VERSION 1.22.11
-ENV NPM_VERSION 7.20.6
+ENV NPM_VERSION 7.21.0
 ENV VERCEL_VERSION 23.1.2
 
 ############### ENV SETUP ###############
@@ -64,7 +64,7 @@ RUN ARCH= && alpineArch="$(apk --print-arch)" \
     && case "${alpineArch##*-}" in \
     x86_64) \
     ARCH='x64' \
-    CHECKSUM="78f4b05466f4bc9e33e62e912724fc835f476cd2ae89fb909fd9eac64484e40a" \
+    CHECKSUM="8889a3ea0d0d8247132cf257ccd4828ddcd7e373f67c875878035b131e9fa1ac" \
     ;; \
     *) ;; \
     esac \
