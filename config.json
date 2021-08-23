@@ -6,7 +6,7 @@
   "ubuntuVersion": "focal",
   "ubuntuSha256": "1e48201ccc2ab83afc435394b3bf70af0fa0055215c1e26a5da9b50a1ae367c9",
   "debianVersion": "stable-slim",
-  "debianSha256": "fba32ef7f7031ed7beba08f6fd386e5dfcba08926ce76ea80929bc012c064f26",
+  "debianSha256": "50a1af812da947cd6cad384b393b59a47382f4a61749caa4c03a4606a007ceca",
   "yarnVersion": "1.22.11",
   "npmVersion": "7.21.0",
   "vercelVersion": "23.1.2"
