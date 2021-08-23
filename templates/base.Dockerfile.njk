@@ -101,12 +101,12 @@ RUN ARCH= && alpineArch="$(apk --print-arch)" \
     && case "${alpineArch##*-}" in \
     x86_64) \
     ARCH='x64' \
-{%- if nodeVersion === "12.22.4" %}
-    CHECKSUM="2fa5020bab6501cd3e6fb90dae0cd19a64df80bb8e8bf184af4f562df5a08b4f" \
-{%- elif nodeVersion === "14.17.4" %}
-    CHECKSUM="78f4b05466f4bc9e33e62e912724fc835f476cd2ae89fb909fd9eac64484e40a" \
-{%- elif nodeVersion === "16.6.1" %}
-    CHECKSUM="9c8438a8d9a1e268153812d1d3f7f63b02283e2082dcd39274674f897496a22a" \
+{%- if nodeVersion === "12.22.5" %}
+    CHECKSUM="1c8ce0d58828faff84486dc116ec817595841c8578ed01266eb69e5383c73201" \
+{%- elif nodeVersion === "14.17.5" %}
+    CHECKSUM="8889a3ea0d0d8247132cf257ccd4828ddcd7e373f67c875878035b131e9fa1ac" \
+{%- elif nodeVersion === "16.6.2" %}
+    CHECKSUM="616e4cdf07aa64d2c4a4653b753a4ec9b2ee4febca8b195ebf82e8f22de67641" \
 {%- endif %}
     ;; \
     *) ;; \
