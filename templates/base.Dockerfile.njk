@@ -10,6 +10,7 @@ ENV NODE_VERSION {{ nodeVersion }}
 ENV YARN_VERSION {{ yarnVersion }}
 ENV NPM_VERSION {{ npmVersion }}
 ENV VERCEL_VERSION {{ vercelVersion }}
+ENV CODECOV_VERSION {{ codecovVersion }}
 
 ############### ENV SETUP ###############
 # husky workaround - https://github.com/typicode/husky/issues/821
@@ -39,6 +40,7 @@ RUN apk add --no-cache \
     jpeg \
     zlib \
     zlib-dev \
+    coreutils \
 {%- elif distro === "ubuntu" or distro === "debian" %}
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
@@ -225,6 +227,22 @@ RUN set -ex \
     && ln -s /opt/yarn-v$YARN_VERSION/bin/yarnpkg /usr/local/bin/yarnpkg \
     && rm yarn-v$YARN_VERSION.tar.gz.asc yarn-v$YARN_VERSION.tar.gz
 RUN yarn --version
+
+############### CODECOV SETUP ###############
+RUN curl https://keybase.io/codecovsecurity/pgp_keys.asc | gpg --no-default-keyring --keyring trustedkeys.gpg --import \
+{%- if distro === "alpine" %}
+    && curl -Os https://uploader.codecov.io/v$CODECOV_VERSION/alpine/codecov \
+    && curl -Os https://uploader.codecov.io/v$CODECOV_VERSION/alpine/codecov.SHA256SUM \
+    && curl -Os https://uploader.codecov.io/v$CODECOV_VERSION/alpine/codecov.SHA256SUM.sig \
+{%- elif distro === "ubuntu" or distro === "debian" %}
+    && curl -Os https://uploader.codecov.io/v$CODECOV_VERSION/linux/codecov \
+    && curl -Os https://uploader.codecov.io/v$CODECOV_VERSION/linux/codecov.SHA256SUM \
+    && curl -Os https://uploader.codecov.io/v$CODECOV_VERSION/linux/codecov.SHA256SUM.sig \
+{%- endif %}
+    && gpgv codecov.SHA256SUM.sig codecov.SHA256SUM \
+    && shasum -a 256 -c codecov.SHA256SUM \
+    && chmod +x codecov \
+    && ln -s codecov /usr/local/bin/codecov
 
 ############### WRAPPING UP ###############
 COPY docker-entrypoint.sh /usr/local/bin/

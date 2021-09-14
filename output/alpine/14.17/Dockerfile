@@ -5,6 +5,7 @@ ENV NODE_VERSION 14.17.5
 ENV YARN_VERSION 1.22.11
 ENV NPM_VERSION 7.21.0
 ENV VERCEL_VERSION 23.1.2
+ENV CODECOV_VERSION 0.1.0_8880
 
 ############### ENV SETUP ###############
 # husky workaround - https://github.com/typicode/husky/issues/821
@@ -33,6 +34,7 @@ RUN apk add --no-cache \
     jpeg \
     zlib \
     zlib-dev \
+    coreutils \
     autoconf \
     automake \
     libtool \
@@ -141,6 +143,16 @@ RUN set -ex \
     && ln -s /opt/yarn-v$YARN_VERSION/bin/yarnpkg /usr/local/bin/yarnpkg \
     && rm yarn-v$YARN_VERSION.tar.gz.asc yarn-v$YARN_VERSION.tar.gz
 RUN yarn --version
+
+############### CODECOV SETUP ###############
+RUN curl https://keybase.io/codecovsecurity/pgp_keys.asc | gpg --no-default-keyring --keyring trustedkeys.gpg --import \
+    && curl -Os https://uploader.codecov.io/v$CODECOV_VERSION/alpine/codecov \
+    && curl -Os https://uploader.codecov.io/v$CODECOV_VERSION/alpine/codecov.SHA256SUM \
+    && curl -Os https://uploader.codecov.io/v$CODECOV_VERSION/alpine/codecov.SHA256SUM.sig \
+    && gpgv codecov.SHA256SUM.sig codecov.SHA256SUM \
+    && shasum -a 256 -c codecov.SHA256SUM \
+    && chmod +x codecov \
+    && ln -s codecov /usr/local/bin/codecov
 
 ############### WRAPPING UP ###############
 COPY docker-entrypoint.sh /usr/local/bin/
