@@ -9,6 +9,5 @@
   "debianSha256": "50a1af812da947cd6cad384b393b59a47382f4a61749caa4c03a4606a007ceca",
   "yarnVersion": "1.22.11",
   "npmVersion": "7.21.0",
-  "vercelVersion": "23.1.2",
-  "codecovVersion": "0.1.0_8880"
+  "vercelVersion": "23.1.2"
 }

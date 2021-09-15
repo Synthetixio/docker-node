@@ -1,12 +1,6 @@
 
 FROM alpine:3.12@sha256:a9c28c813336ece5bb98b36af5b66209ed777a394f4f856c6e62267790883820
 
-ENV NODE_VERSION 16.7.0
-ENV YARN_VERSION 1.22.11
-ENV NPM_VERSION 7.21.0
-ENV VERCEL_VERSION 23.1.2
-ENV CODECOV_VERSION 0.1.0_8880
-
 ############### ENV SETUP ###############
 # husky workaround - https://github.com/typicode/husky/issues/821
 ENV HUSKY 0
@@ -72,9 +66,9 @@ RUN ARCH= && alpineArch="$(apk --print-arch)" \
     esac \
     && if [ -n "${CHECKSUM}" ]; then \
     set -eu; \
-    curl -fsSLO --compressed "https://unofficial-builds.nodejs.org/download/release/v$NODE_VERSION/node-v$NODE_VERSION-linux-$ARCH-musl.tar.xz"; \
-    echo "$CHECKSUM  node-v$NODE_VERSION-linux-$ARCH-musl.tar.xz" | sha256sum -c - \
-    && tar -xJf "node-v$NODE_VERSION-linux-$ARCH-musl.tar.xz" -C /usr/local --strip-components=1 --no-same-owner \
+    curl -fsSLO --compressed "https://unofficial-builds.nodejs.org/download/release/v16.7.0/node-v16.7.0-linux-$ARCH-musl.tar.xz"; \
+    echo "$CHECKSUM  node-v16.7.0-linux-$ARCH-musl.tar.xz" | sha256sum -c - \
+    && tar -xJf "node-v16.7.0-linux-$ARCH-musl.tar.xz" -C /usr/local --strip-components=1 --no-same-owner \
     && ln -s /usr/local/bin/node /usr/local/bin/nodejs; \
     else \
     echo "Building from source" \
@@ -95,20 +89,20 @@ RUN ARCH= && alpineArch="$(apk --print-arch)" \
     gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys "$key" || \
     gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "$key" ; \
     done \
-    && curl -fsSLO --compressed "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION.tar.xz" \
-    && curl -fsSLO --compressed "https://nodejs.org/dist/v$NODE_VERSION/SHASUMS256.txt.asc" \
+    && curl -fsSLO --compressed "https://nodejs.org/dist/v16.7.0/node-v16.7.0.tar.xz" \
+    && curl -fsSLO --compressed "https://nodejs.org/dist/v16.7.0/SHASUMS256.txt.asc" \
     && gpg --batch --decrypt --output SHASUMS256.txt SHASUMS256.txt.asc \
-    && grep " node-v$NODE_VERSION.tar.xz\$" SHASUMS256.txt | sha256sum -c - \
-    && tar -xf "node-v$NODE_VERSION.tar.xz" \
-    && cd "node-v$NODE_VERSION" \
+    && grep " node-v16.7.0.tar.xz\$" SHASUMS256.txt | sha256sum -c - \
+    && tar -xf "node-v16.7.0.tar.xz" \
+    && cd "node-v16.7.0" \
     && ./configure \
     && make -j$(getconf _NPROCESSORS_ONLN) V= \
     && make install \
     && cd .. \
-    && rm -Rf "node-v$NODE_VERSION" \
-    && rm "node-v$NODE_VERSION.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt; \
+    && rm -Rf "node-v16.7.0" \
+    && rm "node-v16.7.0.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt; \
     fi \
-    && rm -f "node-v$NODE_VERSION-linux-$ARCH-musl.tar.xz"
+    && rm -f "node-v16.7.0-linux-$ARCH-musl.tar.xz"
 
 # avoid million NPM install messages
 ENV npm_config_loglevel warn
@@ -117,13 +111,13 @@ ENV npm_config_loglevel warn
 ENV npm_config_unsafe_perm true
 
 # install latest npm, regardless of node version, for speed and fixes
-RUN npm install -g npm@$NPM_VERSION
+RUN npm install -g npm@7.21.0
 
 RUN node --version \
     && npm --version
 
 # vercel setup
-RUN npm install -g vercel@$VERCEL_VERSION
+RUN npm install -g vercel@23.1.2
 RUN vercel --version
 
 ############### YARN SETUP ###############
@@ -134,25 +128,15 @@ RUN set -ex \
     gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys "$key" || \
     gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "$key" ; \
     done \
-    && curl -fsSLO --compressed "https://yarnpkg.com/downloads/$YARN_VERSION/yarn-v$YARN_VERSION.tar.gz" \
-    && curl -fsSLO --compressed "https://yarnpkg.com/downloads/$YARN_VERSION/yarn-v$YARN_VERSION.tar.gz.asc" \
-    && gpg --batch --verify yarn-v$YARN_VERSION.tar.gz.asc yarn-v$YARN_VERSION.tar.gz \
+    && curl -fsSLO --compressed "https://yarnpkg.com/downloads/1.22.11/yarn-v1.22.11.tar.gz" \
+    && curl -fsSLO --compressed "https://yarnpkg.com/downloads/1.22.11/yarn-v1.22.11.tar.gz.asc" \
+    && gpg --batch --verify yarn-v1.22.11.tar.gz.asc yarn-v1.22.11.tar.gz \
     && mkdir -p /opt \
-    && tar -xzf yarn-v$YARN_VERSION.tar.gz -C /opt/ \
-    && ln -s /opt/yarn-v$YARN_VERSION/bin/yarn /usr/local/bin/yarn \
-    && ln -s /opt/yarn-v$YARN_VERSION/bin/yarnpkg /usr/local/bin/yarnpkg \
-    && rm yarn-v$YARN_VERSION.tar.gz.asc yarn-v$YARN_VERSION.tar.gz
+    && tar -xzf yarn-v1.22.11.tar.gz -C /opt/ \
+    && ln -s /opt/yarn-v1.22.11/bin/yarn /usr/local/bin/yarn \
+    && ln -s /opt/yarn-v1.22.11/bin/yarnpkg /usr/local/bin/yarnpkg \
+    && rm yarn-v1.22.11.tar.gz.asc yarn-v1.22.11.tar.gz
 RUN yarn --version
-
-############### CODECOV SETUP ###############
-RUN curl https://keybase.io/codecovsecurity/pgp_keys.asc | gpg --no-default-keyring --keyring trustedkeys.gpg --import \
-    && curl -Os https://uploader.codecov.io/v$CODECOV_VERSION/alpine/codecov \
-    && curl -Os https://uploader.codecov.io/v$CODECOV_VERSION/alpine/codecov.SHA256SUM \
-    && curl -Os https://uploader.codecov.io/v$CODECOV_VERSION/alpine/codecov.SHA256SUM.sig \
-    && gpgv codecov.SHA256SUM.sig codecov.SHA256SUM \
-    && sha256sum -c codecov.SHA256SUM \
-    && chmod +x codecov \
-    && mv codecov /usr/local/bin/codecov
 
 ############### WRAPPING UP ###############
 COPY docker-entrypoint.sh /usr/local/bin/

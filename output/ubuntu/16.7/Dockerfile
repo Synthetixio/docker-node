@@ -1,12 +1,6 @@
 
 FROM ubuntu:focal@sha256:1e48201ccc2ab83afc435394b3bf70af0fa0055215c1e26a5da9b50a1ae367c9
 
-ENV NODE_VERSION 16.7.0
-ENV YARN_VERSION 1.22.11
-ENV NPM_VERSION 7.21.0
-ENV VERCEL_VERSION 23.1.2
-ENV CODECOV_VERSION 0.1.0_8880
-
 ############### ENV SETUP ###############
 # husky workaround - https://github.com/typicode/husky/issues/821
 ENV HUSKY 0
@@ -98,12 +92,12 @@ RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
     gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys "$key" || \
     gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "$key" ; \
     done \
-    && curl -fsSLO --compressed "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-$ARCH.tar.xz" \
-    && curl -fsSLO --compressed "https://nodejs.org/dist/v$NODE_VERSION/SHASUMS256.txt.asc" \
+    && curl -fsSLO --compressed "https://nodejs.org/dist/v16.7.0/node-v16.7.0-linux-$ARCH.tar.xz" \
+    && curl -fsSLO --compressed "https://nodejs.org/dist/v16.7.0/SHASUMS256.txt.asc" \
     && gpg --batch --decrypt --output SHASUMS256.txt SHASUMS256.txt.asc \
-    && grep " node-v$NODE_VERSION-linux-$ARCH.tar.xz\$" SHASUMS256.txt | sha256sum -c - \
-    && tar -xJf "node-v$NODE_VERSION-linux-$ARCH.tar.xz" -C /usr/local --strip-components=1 --no-same-owner \
-    && rm "node-v$NODE_VERSION-linux-$ARCH.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt \
+    && grep " node-v16.7.0-linux-$ARCH.tar.xz\$" SHASUMS256.txt | sha256sum -c - \
+    && tar -xJf "node-v16.7.0-linux-$ARCH.tar.xz" -C /usr/local --strip-components=1 --no-same-owner \
+    && rm "node-v16.7.0-linux-$ARCH.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt \
     && ln -s /usr/local/bin/node /usr/local/bin/nodejs
 
 # avoid million NPM install messages
@@ -113,13 +107,13 @@ ENV npm_config_loglevel warn
 ENV npm_config_unsafe_perm true
 
 # install latest npm, regardless of node version, for speed and fixes
-RUN npm install -g npm@$NPM_VERSION
+RUN npm install -g npm@7.21.0
 
 RUN node --version \
     && npm --version
 
 # vercel setup
-RUN npm install -g vercel@$VERCEL_VERSION
+RUN npm install -g vercel@23.1.2
 RUN vercel --version
 
 ############### YARN SETUP ###############
@@ -130,25 +124,15 @@ RUN set -ex \
     gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys "$key" || \
     gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "$key" ; \
     done \
-    && curl -fsSLO --compressed "https://yarnpkg.com/downloads/$YARN_VERSION/yarn-v$YARN_VERSION.tar.gz" \
-    && curl -fsSLO --compressed "https://yarnpkg.com/downloads/$YARN_VERSION/yarn-v$YARN_VERSION.tar.gz.asc" \
-    && gpg --batch --verify yarn-v$YARN_VERSION.tar.gz.asc yarn-v$YARN_VERSION.tar.gz \
+    && curl -fsSLO --compressed "https://yarnpkg.com/downloads/1.22.11/yarn-v1.22.11.tar.gz" \
+    && curl -fsSLO --compressed "https://yarnpkg.com/downloads/1.22.11/yarn-v1.22.11.tar.gz.asc" \
+    && gpg --batch --verify yarn-v1.22.11.tar.gz.asc yarn-v1.22.11.tar.gz \
     && mkdir -p /opt \
-    && tar -xzf yarn-v$YARN_VERSION.tar.gz -C /opt/ \
-    && ln -s /opt/yarn-v$YARN_VERSION/bin/yarn /usr/local/bin/yarn \
-    && ln -s /opt/yarn-v$YARN_VERSION/bin/yarnpkg /usr/local/bin/yarnpkg \
-    && rm yarn-v$YARN_VERSION.tar.gz.asc yarn-v$YARN_VERSION.tar.gz
+    && tar -xzf yarn-v1.22.11.tar.gz -C /opt/ \
+    && ln -s /opt/yarn-v1.22.11/bin/yarn /usr/local/bin/yarn \
+    && ln -s /opt/yarn-v1.22.11/bin/yarnpkg /usr/local/bin/yarnpkg \
+    && rm yarn-v1.22.11.tar.gz.asc yarn-v1.22.11.tar.gz
 RUN yarn --version
-
-############### CODECOV SETUP ###############
-RUN curl https://keybase.io/codecovsecurity/pgp_keys.asc | gpg --no-default-keyring --keyring trustedkeys.gpg --import \
-    && curl -Os https://uploader.codecov.io/v$CODECOV_VERSION/linux/codecov \
-    && curl -Os https://uploader.codecov.io/v$CODECOV_VERSION/linux/codecov.SHA256SUM \
-    && curl -Os https://uploader.codecov.io/v$CODECOV_VERSION/linux/codecov.SHA256SUM.sig \
-    && gpgv codecov.SHA256SUM.sig codecov.SHA256SUM \
-    && shasum -a 256 -c codecov.SHA256SUM \
-    && chmod +x codecov \
-    && mv codecov /usr/local/bin/codecov
 
 ############### WRAPPING UP ###############
 COPY docker-entrypoint.sh /usr/local/bin/
