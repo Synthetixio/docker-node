@@ -152,7 +152,7 @@ RUN curl https://keybase.io/codecovsecurity/pgp_keys.asc | gpg --no-default-keyr
     && gpgv codecov.SHA256SUM.sig codecov.SHA256SUM \
     && sha256sum -c codecov.SHA256SUM \
     && chmod +x codecov \
-    && ln -s codecov /usr/local/bin/codecov
+    && mv codecov /usr/local/bin/codecov
 
 ############### WRAPPING UP ###############
 COPY docker-entrypoint.sh /usr/local/bin/
