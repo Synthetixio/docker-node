@@ -150,7 +150,7 @@ RUN curl https://keybase.io/codecovsecurity/pgp_keys.asc | gpg --no-default-keyr
     && curl -Os https://uploader.codecov.io/v$CODECOV_VERSION/alpine/codecov.SHA256SUM \
     && curl -Os https://uploader.codecov.io/v$CODECOV_VERSION/alpine/codecov.SHA256SUM.sig \
     && gpgv codecov.SHA256SUM.sig codecov.SHA256SUM \
-    && shasum -a 256 -c codecov.SHA256SUM \
+    && sha256sum -c codecov.SHA256SUM \
     && chmod +x codecov \
     && ln -s codecov /usr/local/bin/codecov
 
