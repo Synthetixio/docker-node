@@ -200,6 +200,9 @@ RUN npm install -g npm@{{ npmVersion }}
 RUN node --version \
     && npm --version
 
+# lock dependencies by default
+RUN npm config set save-exact=true
+
 # vercel setup
 RUN npm install -g vercel@{{ vercelVersion }}
 RUN vercel --version
