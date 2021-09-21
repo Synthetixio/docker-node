@@ -14,6 +14,9 @@ ENV DEBIAN_FRONTEND noninteractive
 ENV DEBCONF_NONINTERACTIVE_SEEN true
 # good colors for most applications
 ENV TERM xterm
+# required for patch-package on heroku
+ENV NPM_CONFIG_PRODUCTION false
+ENV YARN_PRODUCTION false
 
 ############### INSTALL DEPS ###############
 RUN apt-get update && \
