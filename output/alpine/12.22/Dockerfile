@@ -32,6 +32,7 @@ RUN apk add --no-cache \
     zlib \
     zlib-dev \
     coreutils \
+    openssh \
     autoconf \
     automake \
     libtool \

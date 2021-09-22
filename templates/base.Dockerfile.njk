@@ -38,6 +38,7 @@ RUN apk add --no-cache \
     zlib \
     zlib-dev \
     coreutils \
+    openssh \
 {%- elif distro === "ubuntu" or distro === "debian" %}
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
@@ -47,6 +48,7 @@ RUN apt-get update && \
     python3-apt \
     python3-dev \
     build-essential \
+    openssh-server \
     # mozjpeg dependencies
 {%- endif %}
     autoconf \

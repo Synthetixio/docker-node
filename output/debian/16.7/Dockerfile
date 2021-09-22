@@ -27,6 +27,7 @@ RUN apt-get update && \
     python3-apt \
     python3-dev \
     build-essential \
+    openssh-server \
     # mozjpeg dependencies
     autoconf \
     automake \
