@@ -212,6 +212,10 @@ RUN npm config set save-exact=true
 RUN npm install -g vercel@{{ vercelVersion }}
 RUN vercel --version
 
+# amplify setup
+RUN npm install -g @aws-amplify/cli@{{ amplifyVersion }}
+RUN amplify --version
+
 ############### YARN SETUP ###############
 RUN set -ex \
     && for key in \
