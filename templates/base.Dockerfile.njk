@@ -87,8 +87,6 @@ RUN curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
 RUN python3 get-pip.py
 # add local python dir to path
 ENV PATH $PATH:/root/.local/bin
-# install slither
-RUN pip3 install --user slither-analyzer
 {%- endif %}
 
 ############### NODE SETUP ###############
