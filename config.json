@@ -1,14 +1,13 @@
 {
   "distro": ["alpine", "ubuntu", "debian"],
-  "nodeVersion": ["12.22.6", "14.17.6", "16.10.0"],
+  "nodeVersion": ["12.22.6", "14.18.0", "16.11.0"],
   "alpineVersion": 3.12,
   "alpineSha256": "a721d672be3cdaaf1285c2b60b76d81ab4a8a3cf5a7180a966f2c545305ad6de",
   "ubuntuVersion": "focal",
-  "ubuntuSha256": "10cbddb6cf8568f56584ccb6c866203e68ab8e621bb87038e254f6f27f955bbe",
+  "ubuntuSha256": "3555f4996aea6be945ae1532fa377c88f4b3b9e6d93531f47af5d78a7d5e3761",
   "debianVersion": "stable-slim",
-  "debianSha256": "a7cb457754b303da3e1633601c77636a0e05e6c26831d1f58c0e6b280f3f7c88",
-  "yarnVersion": "1.22.11",
-  "npmVersion": "7.24.1",
-  "vercelVersion": "23.1.2",
-  "amplifyVersion": "6.0.1"
+  "debianSha256": "edb0a5915350ee6e2fedd8f9d0fe2e7f956f7a58f7f41b5e836e0bb7543e48a1",
+  "yarnVersion": "1.22.15",
+  "npmVersion": "7.24.2",
+  "vercelVersion": "23.1.2"
 }
