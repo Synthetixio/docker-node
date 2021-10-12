@@ -1,5 +1,5 @@
 
-FROM ubuntu:focal@sha256:10cbddb6cf8568f56584ccb6c866203e68ab8e621bb87038e254f6f27f955bbe
+FROM alpine:3.12@sha256:a721d672be3cdaaf1285c2b60b76d81ab4a8a3cf5a7180a966f2c545305ad6de
 
 ############### ENV SETUP ###############
 # husky workaround - https://github.com/typicode/husky/issues/821
@@ -19,16 +19,20 @@ ENV NPM_CONFIG_PRODUCTION false
 ENV YARN_PRODUCTION false
 
 ############### INSTALL DEPS ###############
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-    locales \
-    software-properties-common \
-    python3-distutils \
-    python3-apt \
-    python3-dev \
-    build-essential \
-    openssh-server \
+RUN apk add --no-cache \
+    libstdc++ \
+    py3-pip \
+    py3-setuptools \
+    libgcc \
+    linux-headers \
+    tar \
     # mozjpeg dependencies
+    tiff \
+    jpeg \
+    zlib \
+    zlib-dev \
+    coreutils \
+    openssh \
     autoconf \
     automake \
     libtool \
@@ -48,36 +52,31 @@ RUN apt-get update && \
     wget \
     binutils-gold \
     gnupg \
-    && rm -rf /var/lib/apt/lists/* /var/cache/apt/*
-# locale setup
-RUN localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8
-ENV LANG en_US.utf8
-
-############### PYTHON SETUP ###############
-# install pip
-RUN curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
-RUN python3 get-pip.py
-# add local python dir to path
-ENV PATH $PATH:/root/.local/bin
+    && echo "Finished installing packages"
 
 ############### NODE SETUP ###############
 # create new node user
-RUN groupadd --gid 1000 node \
-    && useradd --uid 1000 --gid node --shell /bin/bash --create-home node
+RUN addgroup -g 1000 node \
+    && adduser -u 1000 -G node -s /bin/sh -D node
 
 # node setup
-RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
-    && case "${dpkgArch##*-}" in \
-    amd64) ARCH='x64';; \
-    ppc64el) ARCH='ppc64le';; \
-    s390x) ARCH='s390x';; \
-    arm64) ARCH='arm64';; \
-    armhf) ARCH='armv7l';; \
-    i386) ARCH='x86';; \
-    *) echo "unsupported architecture"; exit 1 ;; \
+RUN ARCH= && alpineArch="$(apk --print-arch)" \
+    && case "${alpineArch##*-}" in \
+    x86_64) \
+    ARCH='x64' \
+    CHECKSUM="3f6bdb98f5734e10bd190635b8688347c5ac794091a1f11cb1c7694b43a969b7" \
+    ;; \
+    *) ;; \
     esac \
+    && if [ -n "${CHECKSUM}" ]; then \
+    set -eu; \
+    curl -fsSLO --compressed "https://unofficial-builds.nodejs.org/download/release/v14.18.0/node-v14.18.0-linux-$ARCH-musl.tar.xz"; \
+    echo "$CHECKSUM  node-v14.18.0-linux-$ARCH-musl.tar.xz" | sha256sum -c - \
+    && tar -xJf "node-v14.18.0-linux-$ARCH-musl.tar.xz" -C /usr/local --strip-components=1 --no-same-owner \
+    && ln -s /usr/local/bin/node /usr/local/bin/nodejs; \
+    else \
+    echo "Building from source" \
     # gpg keys listed at https://github.com/nodejs/node#release-keys
-    && set -ex \
     && for key in \
     4ED778F539E3634C779C87C6D7062848A1AB005C \
     94AE36675C464D64BAFA68DD7434390BDBE9B9C5 \
@@ -94,13 +93,20 @@ RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
     gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys "$key" || \
     gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "$key" ; \
     done \
-    && curl -fsSLO --compressed "https://nodejs.org/dist/v14.17.6/node-v14.17.6-linux-$ARCH.tar.xz" \
-    && curl -fsSLO --compressed "https://nodejs.org/dist/v14.17.6/SHASUMS256.txt.asc" \
+    && curl -fsSLO --compressed "https://nodejs.org/dist/v14.18.0/node-v14.18.0.tar.xz" \
+    && curl -fsSLO --compressed "https://nodejs.org/dist/v14.18.0/SHASUMS256.txt.asc" \
     && gpg --batch --decrypt --output SHASUMS256.txt SHASUMS256.txt.asc \
-    && grep " node-v14.17.6-linux-$ARCH.tar.xz\$" SHASUMS256.txt | sha256sum -c - \
-    && tar -xJf "node-v14.17.6-linux-$ARCH.tar.xz" -C /usr/local --strip-components=1 --no-same-owner \
-    && rm "node-v14.17.6-linux-$ARCH.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt \
-    && ln -s /usr/local/bin/node /usr/local/bin/nodejs
+    && grep " node-v14.18.0.tar.xz\$" SHASUMS256.txt | sha256sum -c - \
+    && tar -xf "node-v14.18.0.tar.xz" \
+    && cd "node-v14.18.0" \
+    && ./configure \
+    && make -j$(getconf _NPROCESSORS_ONLN) V= \
+    && make install \
+    && cd .. \
+    && rm -Rf "node-v14.18.0" \
+    && rm "node-v14.18.0.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt; \
+    fi \
+    && rm -f "node-v14.18.0-linux-$ARCH-musl.tar.xz"
 
 # avoid million NPM install messages
 ENV npm_config_loglevel warn
@@ -109,7 +115,7 @@ ENV npm_config_loglevel warn
 ENV npm_config_unsafe_perm true
 
 # install latest npm, regardless of node version, for speed and fixes
-RUN npm install -g npm@7.24.1
+RUN npm install -g npm@7.24.2
 
 RUN node --version \
     && npm --version
@@ -121,10 +127,6 @@ RUN npm config set save-exact=true
 RUN npm install -g vercel@23.1.2
 RUN vercel --version
 
-# amplify setup
-RUN npm install -g @aws-amplify/cli@6.0.1
-RUN amplify --version
-
 ############### YARN SETUP ###############
 RUN set -ex \
     && for key in \
@@ -133,14 +135,14 @@ RUN set -ex \
     gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys "$key" || \
     gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "$key" ; \
     done \
-    && curl -fsSLO --compressed "https://yarnpkg.com/downloads/1.22.11/yarn-v1.22.11.tar.gz" \
-    && curl -fsSLO --compressed "https://yarnpkg.com/downloads/1.22.11/yarn-v1.22.11.tar.gz.asc" \
-    && gpg --batch --verify yarn-v1.22.11.tar.gz.asc yarn-v1.22.11.tar.gz \
+    && curl -fsSLO --compressed "https://yarnpkg.com/downloads/1.22.15/yarn-v1.22.15.tar.gz" \
+    && curl -fsSLO --compressed "https://yarnpkg.com/downloads/1.22.15/yarn-v1.22.15.tar.gz.asc" \
+    && gpg --batch --verify yarn-v1.22.15.tar.gz.asc yarn-v1.22.15.tar.gz \
     && mkdir -p /opt \
-    && tar -xzf yarn-v1.22.11.tar.gz -C /opt/ \
-    && ln -s /opt/yarn-v1.22.11/bin/yarn /usr/local/bin/yarn \
-    && ln -s /opt/yarn-v1.22.11/bin/yarnpkg /usr/local/bin/yarnpkg \
-    && rm yarn-v1.22.11.tar.gz.asc yarn-v1.22.11.tar.gz
+    && tar -xzf yarn-v1.22.15.tar.gz -C /opt/ \
+    && ln -s /opt/yarn-v1.22.15/bin/yarn /usr/local/bin/yarn \
+    && ln -s /opt/yarn-v1.22.15/bin/yarnpkg /usr/local/bin/yarnpkg \
+    && rm yarn-v1.22.15.tar.gz.asc yarn-v1.22.15.tar.gz
 RUN yarn --version
 
 ############### WRAPPING UP ###############

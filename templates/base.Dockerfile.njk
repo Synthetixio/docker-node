@@ -102,10 +102,10 @@ RUN ARCH= && alpineArch="$(apk --print-arch)" \
     ARCH='x64' \
 {%- if nodeVersion === "12.22.6" %}
     CHECKSUM="0ce2b97ecbbd84f1a5ed13278ed6845d93c6454d8550730b247a990438dba322" \
-{%- elif nodeVersion === "14.17.6" %}
-    CHECKSUM="d9292c9fa9b4439f0d681110802d03750d34cc95a8b37a06314e5a228de827e7" \
-{%- elif nodeVersion === "16.10.0" %}
-    CHECKSUM="b4b00b3e9545f449620df3480bfd4c00b31c81d57b632a6138184d6afd70f09b" \
+{%- elif nodeVersion === "14.18.0" %}
+    CHECKSUM="3f6bdb98f5734e10bd190635b8688347c5ac794091a1f11cb1c7694b43a969b7" \
+{%- elif nodeVersion === "16.11.0" %}
+    CHECKSUM="2ac71f8137cab764f0f61e58c685f0885ae3c952ff045f4926983f9bd7f56e22" \
 {%- endif %}
     ;; \
     *) ;; \
@@ -209,10 +209,6 @@ RUN npm config set save-exact=true
 # vercel setup
 RUN npm install -g vercel@{{ vercelVersion }}
 RUN vercel --version
-
-# amplify setup
-RUN npm install -g @aws-amplify/cli@{{ amplifyVersion }}
-RUN amplify --version
 
 ############### YARN SETUP ###############
 RUN set -ex \

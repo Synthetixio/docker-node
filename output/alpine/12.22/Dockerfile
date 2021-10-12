@@ -115,7 +115,7 @@ ENV npm_config_loglevel warn
 ENV npm_config_unsafe_perm true
 
 # install latest npm, regardless of node version, for speed and fixes
-RUN npm install -g npm@7.24.1
+RUN npm install -g npm@7.24.2
 
 RUN node --version \
     && npm --version
@@ -127,10 +127,6 @@ RUN npm config set save-exact=true
 RUN npm install -g vercel@23.1.2
 RUN vercel --version
 
-# amplify setup
-RUN npm install -g @aws-amplify/cli@6.0.1
-RUN amplify --version
-
 ############### YARN SETUP ###############
 RUN set -ex \
     && for key in \
@@ -139,14 +135,14 @@ RUN set -ex \
     gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys "$key" || \
     gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "$key" ; \
     done \
-    && curl -fsSLO --compressed "https://yarnpkg.com/downloads/1.22.11/yarn-v1.22.11.tar.gz" \
-    && curl -fsSLO --compressed "https://yarnpkg.com/downloads/1.22.11/yarn-v1.22.11.tar.gz.asc" \
-    && gpg --batch --verify yarn-v1.22.11.tar.gz.asc yarn-v1.22.11.tar.gz \
+    && curl -fsSLO --compressed "https://yarnpkg.com/downloads/1.22.15/yarn-v1.22.15.tar.gz" \
+    && curl -fsSLO --compressed "https://yarnpkg.com/downloads/1.22.15/yarn-v1.22.15.tar.gz.asc" \
+    && gpg --batch --verify yarn-v1.22.15.tar.gz.asc yarn-v1.22.15.tar.gz \
     && mkdir -p /opt \
-    && tar -xzf yarn-v1.22.11.tar.gz -C /opt/ \
-    && ln -s /opt/yarn-v1.22.11/bin/yarn /usr/local/bin/yarn \
-    && ln -s /opt/yarn-v1.22.11/bin/yarnpkg /usr/local/bin/yarnpkg \
-    && rm yarn-v1.22.11.tar.gz.asc yarn-v1.22.11.tar.gz
+    && tar -xzf yarn-v1.22.15.tar.gz -C /opt/ \
+    && ln -s /opt/yarn-v1.22.15/bin/yarn /usr/local/bin/yarn \
+    && ln -s /opt/yarn-v1.22.15/bin/yarnpkg /usr/local/bin/yarnpkg \
+    && rm yarn-v1.22.15.tar.gz.asc yarn-v1.22.15.tar.gz
 RUN yarn --version
 
 ############### WRAPPING UP ###############

@@ -1,5 +1,5 @@
 
-FROM debian:stable-slim@sha256:a7cb457754b303da3e1633601c77636a0e05e6c26831d1f58c0e6b280f3f7c88
+FROM ubuntu:focal@sha256:3555f4996aea6be945ae1532fa377c88f4b3b9e6d93531f47af5d78a7d5e3761
 
 ############### ENV SETUP ###############
 # husky workaround - https://github.com/typicode/husky/issues/821
@@ -94,12 +94,12 @@ RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
     gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys "$key" || \
     gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "$key" ; \
     done \
-    && curl -fsSLO --compressed "https://nodejs.org/dist/v14.17.6/node-v14.17.6-linux-$ARCH.tar.xz" \
-    && curl -fsSLO --compressed "https://nodejs.org/dist/v14.17.6/SHASUMS256.txt.asc" \
+    && curl -fsSLO --compressed "https://nodejs.org/dist/v16.11.0/node-v16.11.0-linux-$ARCH.tar.xz" \
+    && curl -fsSLO --compressed "https://nodejs.org/dist/v16.11.0/SHASUMS256.txt.asc" \
     && gpg --batch --decrypt --output SHASUMS256.txt SHASUMS256.txt.asc \
-    && grep " node-v14.17.6-linux-$ARCH.tar.xz\$" SHASUMS256.txt | sha256sum -c - \
-    && tar -xJf "node-v14.17.6-linux-$ARCH.tar.xz" -C /usr/local --strip-components=1 --no-same-owner \
-    && rm "node-v14.17.6-linux-$ARCH.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt \
+    && grep " node-v16.11.0-linux-$ARCH.tar.xz\$" SHASUMS256.txt | sha256sum -c - \
+    && tar -xJf "node-v16.11.0-linux-$ARCH.tar.xz" -C /usr/local --strip-components=1 --no-same-owner \
+    && rm "node-v16.11.0-linux-$ARCH.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt \
     && ln -s /usr/local/bin/node /usr/local/bin/nodejs
 
 # avoid million NPM install messages
@@ -109,7 +109,7 @@ ENV npm_config_loglevel warn
 ENV npm_config_unsafe_perm true
 
 # install latest npm, regardless of node version, for speed and fixes
-RUN npm install -g npm@7.24.1
+RUN npm install -g npm@7.24.2
 
 RUN node --version \
     && npm --version
@@ -121,10 +121,6 @@ RUN npm config set save-exact=true
 RUN npm install -g vercel@23.1.2
 RUN vercel --version
 
-# amplify setup
-RUN npm install -g @aws-amplify/cli@6.0.1
-RUN amplify --version
-
 ############### YARN SETUP ###############
 RUN set -ex \
     && for key in \
@@ -133,14 +129,14 @@ RUN set -ex \
     gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys "$key" || \
     gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "$key" ; \
     done \
-    && curl -fsSLO --compressed "https://yarnpkg.com/downloads/1.22.11/yarn-v1.22.11.tar.gz" \
-    && curl -fsSLO --compressed "https://yarnpkg.com/downloads/1.22.11/yarn-v1.22.11.tar.gz.asc" \
-    && gpg --batch --verify yarn-v1.22.11.tar.gz.asc yarn-v1.22.11.tar.gz \
+    && curl -fsSLO --compressed "https://yarnpkg.com/downloads/1.22.15/yarn-v1.22.15.tar.gz" \
+    && curl -fsSLO --compressed "https://yarnpkg.com/downloads/1.22.15/yarn-v1.22.15.tar.gz.asc" \
+    && gpg --batch --verify yarn-v1.22.15.tar.gz.asc yarn-v1.22.15.tar.gz \
     && mkdir -p /opt \
-    && tar -xzf yarn-v1.22.11.tar.gz -C /opt/ \
-    && ln -s /opt/yarn-v1.22.11/bin/yarn /usr/local/bin/yarn \
-    && ln -s /opt/yarn-v1.22.11/bin/yarnpkg /usr/local/bin/yarnpkg \
-    && rm yarn-v1.22.11.tar.gz.asc yarn-v1.22.11.tar.gz
+    && tar -xzf yarn-v1.22.15.tar.gz -C /opt/ \
+    && ln -s /opt/yarn-v1.22.15/bin/yarn /usr/local/bin/yarn \
+    && ln -s /opt/yarn-v1.22.15/bin/yarnpkg /usr/local/bin/yarnpkg \
+    && rm yarn-v1.22.15.tar.gz.asc yarn-v1.22.15.tar.gz
 RUN yarn --version
 
 ############### WRAPPING UP ###############
