@@ -2,18 +2,18 @@ name: Docker Image (library/node) CI
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
     paths:
-      - 'output/**'
+      - "output/**"
       - docker-entrypoint.sh
-      - '.github/workflows/build-library-node.yml'
+      - ".github/workflows/build-library-node.yml"
 
 jobs:
   build_and_push:
     strategy:
       matrix:
-        node: [ '12.22', '14.18', '16.11']
-        distro: [ alpine, debian, ubuntu ]
+        node: ["12.22", "14.18", "16.13", "17.0"]
+        distro: [alpine, debian, ubuntu]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -29,8 +29,7 @@ jobs:
         uses: actions/cache@3b70782066bd817837b6bd8c518d45b54d91bf76 # pin@v2
         with:
           path: /tmp/.buildx-cache
-          key: node-${{ runner.os }}-${{ matrix.node }}-${{ matrix.distro }}-buildx-${{
-            github.sha }}
+          key: node-${{ runner.os }}-${{ matrix.node }}-${{ matrix.distro }}-buildx-${{ github.sha }}
           restore-keys: |
             node-${{ runner.os }}-${{ matrix.node }}-${{ matrix.distro }}-buildx-
 

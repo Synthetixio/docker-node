@@ -94,12 +94,12 @@ RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
     gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys "$key" || \
     gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "$key" ; \
     done \
-    && curl -fsSLO --compressed "https://nodejs.org/dist/v12.22.6/node-v12.22.6-linux-$ARCH.tar.xz" \
-    && curl -fsSLO --compressed "https://nodejs.org/dist/v12.22.6/SHASUMS256.txt.asc" \
+    && curl -fsSLO --compressed "https://nodejs.org/dist/v12.22.7/node-v12.22.7-linux-$ARCH.tar.xz" \
+    && curl -fsSLO --compressed "https://nodejs.org/dist/v12.22.7/SHASUMS256.txt.asc" \
     && gpg --batch --decrypt --output SHASUMS256.txt SHASUMS256.txt.asc \
-    && grep " node-v12.22.6-linux-$ARCH.tar.xz\$" SHASUMS256.txt | sha256sum -c - \
-    && tar -xJf "node-v12.22.6-linux-$ARCH.tar.xz" -C /usr/local --strip-components=1 --no-same-owner \
-    && rm "node-v12.22.6-linux-$ARCH.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt \
+    && grep " node-v12.22.7-linux-$ARCH.tar.xz\$" SHASUMS256.txt | sha256sum -c - \
+    && tar -xJf "node-v12.22.7-linux-$ARCH.tar.xz" -C /usr/local --strip-components=1 --no-same-owner \
+    && rm "node-v12.22.7-linux-$ARCH.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt \
     && ln -s /usr/local/bin/node /usr/local/bin/nodejs
 
 # avoid million NPM install messages
@@ -109,7 +109,7 @@ ENV npm_config_loglevel warn
 ENV npm_config_unsafe_perm true
 
 # install latest npm, regardless of node version, for speed and fixes
-RUN npm install -g npm@7.24.2
+RUN npm install -g npm@8.1.2
 
 RUN node --version \
     && npm --version
@@ -129,14 +129,14 @@ RUN set -ex \
     gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys "$key" || \
     gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "$key" ; \
     done \
-    && curl -fsSLO --compressed "https://yarnpkg.com/downloads/1.22.15/yarn-v1.22.15.tar.gz" \
-    && curl -fsSLO --compressed "https://yarnpkg.com/downloads/1.22.15/yarn-v1.22.15.tar.gz.asc" \
-    && gpg --batch --verify yarn-v1.22.15.tar.gz.asc yarn-v1.22.15.tar.gz \
+    && curl -fsSLO --compressed "https://yarnpkg.com/downloads/1.22.17/yarn-v1.22.17.tar.gz" \
+    && curl -fsSLO --compressed "https://yarnpkg.com/downloads/1.22.17/yarn-v1.22.17.tar.gz.asc" \
+    && gpg --batch --verify yarn-v1.22.17.tar.gz.asc yarn-v1.22.17.tar.gz \
     && mkdir -p /opt \
-    && tar -xzf yarn-v1.22.15.tar.gz -C /opt/ \
-    && ln -s /opt/yarn-v1.22.15/bin/yarn /usr/local/bin/yarn \
-    && ln -s /opt/yarn-v1.22.15/bin/yarnpkg /usr/local/bin/yarnpkg \
-    && rm yarn-v1.22.15.tar.gz.asc yarn-v1.22.15.tar.gz
+    && tar -xzf yarn-v1.22.17.tar.gz -C /opt/ \
+    && ln -s /opt/yarn-v1.22.17/bin/yarn /usr/local/bin/yarn \
+    && ln -s /opt/yarn-v1.22.17/bin/yarnpkg /usr/local/bin/yarnpkg \
+    && rm yarn-v1.22.17.tar.gz.asc yarn-v1.22.17.tar.gz
 RUN yarn --version
 
 ############### WRAPPING UP ###############
