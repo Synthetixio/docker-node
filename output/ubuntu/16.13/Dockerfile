@@ -109,7 +109,7 @@ ENV npm_config_loglevel warn
 ENV npm_config_unsafe_perm true
 
 # install latest npm, regardless of node version, for speed and fixes
-RUN npm install -g npm@8.1.2
+RUN npm install -g npm@8.1.3
 
 RUN node --version \
     && npm --version
