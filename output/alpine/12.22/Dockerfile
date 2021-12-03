@@ -1,5 +1,5 @@
 
-FROM alpine:3.12@sha256:a721d672be3cdaaf1285c2b60b76d81ab4a8a3cf5a7180a966f2c545305ad6de
+FROM alpine:3.12@sha256:74e5ad84a67e9b8ed7609b32dc2460b76175020923d7f494a73a851446222d18
 
 ############### ENV SETUP ###############
 # husky workaround - https://github.com/typicode/husky/issues/821
@@ -115,7 +115,7 @@ ENV npm_config_loglevel warn
 ENV npm_config_unsafe_perm true
 
 # install latest npm, regardless of node version, for speed and fixes
-RUN npm install -g npm@8.1.3
+RUN npm install -g npm@8.2.0
 
 RUN node --version \
     && npm --version

@@ -1,5 +1,5 @@
 
-FROM debian:stable-slim@sha256:edb0a5915350ee6e2fedd8f9d0fe2e7f956f7a58f7f41b5e836e0bb7543e48a1
+FROM debian:stable-slim@sha256:997f667fcdaf6b867948222a7a4c6985e6bddb575cc4b02ffce848f8e20dba58
 
 ############### ENV SETUP ###############
 # husky workaround - https://github.com/typicode/husky/issues/821
@@ -94,12 +94,12 @@ RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
     gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys "$key" || \
     gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "$key" ; \
     done \
-    && curl -fsSLO --compressed "https://nodejs.org/dist/v14.18.1/node-v14.18.1-linux-$ARCH.tar.xz" \
-    && curl -fsSLO --compressed "https://nodejs.org/dist/v14.18.1/SHASUMS256.txt.asc" \
+    && curl -fsSLO --compressed "https://nodejs.org/dist/v14.18.2/node-v14.18.2-linux-$ARCH.tar.xz" \
+    && curl -fsSLO --compressed "https://nodejs.org/dist/v14.18.2/SHASUMS256.txt.asc" \
     && gpg --batch --decrypt --output SHASUMS256.txt SHASUMS256.txt.asc \
-    && grep " node-v14.18.1-linux-$ARCH.tar.xz\$" SHASUMS256.txt | sha256sum -c - \
-    && tar -xJf "node-v14.18.1-linux-$ARCH.tar.xz" -C /usr/local --strip-components=1 --no-same-owner \
-    && rm "node-v14.18.1-linux-$ARCH.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt \
+    && grep " node-v14.18.2-linux-$ARCH.tar.xz\$" SHASUMS256.txt | sha256sum -c - \
+    && tar -xJf "node-v14.18.2-linux-$ARCH.tar.xz" -C /usr/local --strip-components=1 --no-same-owner \
+    && rm "node-v14.18.2-linux-$ARCH.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt \
     && ln -s /usr/local/bin/node /usr/local/bin/nodejs
 
 # avoid million NPM install messages
@@ -109,7 +109,7 @@ ENV npm_config_loglevel warn
 ENV npm_config_unsafe_perm true
 
 # install latest npm, regardless of node version, for speed and fixes
-RUN npm install -g npm@8.1.3
+RUN npm install -g npm@8.2.0
 
 RUN node --version \
     && npm --version

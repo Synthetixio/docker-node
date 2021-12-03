@@ -1,5 +1,5 @@
 
-FROM alpine:3.12@sha256:a721d672be3cdaaf1285c2b60b76d81ab4a8a3cf5a7180a966f2c545305ad6de
+FROM alpine:3.12@sha256:74e5ad84a67e9b8ed7609b32dc2460b76175020923d7f494a73a851446222d18
 
 ############### ENV SETUP ###############
 # husky workaround - https://github.com/typicode/husky/issues/821
@@ -64,15 +64,15 @@ RUN ARCH= && alpineArch="$(apk --print-arch)" \
     && case "${alpineArch##*-}" in \
     x86_64) \
     ARCH='x64' \
-    CHECKSUM="8d6d2b71b76dc31bbcf12827b9e60212bc04a556c3498e75708d38f5eb4ae6eb" \
+    CHECKSUM="7a1a1a18e51ad20245fc366a0848cdb55e968094c807a094555ec2c214e8e9c6" \
     ;; \
     *) ;; \
     esac \
     && if [ -n "${CHECKSUM}" ]; then \
     set -eu; \
-    curl -fsSLO --compressed "https://unofficial-builds.nodejs.org/download/release/v14.18.1/node-v14.18.1-linux-$ARCH-musl.tar.xz"; \
-    echo "$CHECKSUM  node-v14.18.1-linux-$ARCH-musl.tar.xz" | sha256sum -c - \
-    && tar -xJf "node-v14.18.1-linux-$ARCH-musl.tar.xz" -C /usr/local --strip-components=1 --no-same-owner \
+    curl -fsSLO --compressed "https://unofficial-builds.nodejs.org/download/release/v14.18.2/node-v14.18.2-linux-$ARCH-musl.tar.xz"; \
+    echo "$CHECKSUM  node-v14.18.2-linux-$ARCH-musl.tar.xz" | sha256sum -c - \
+    && tar -xJf "node-v14.18.2-linux-$ARCH-musl.tar.xz" -C /usr/local --strip-components=1 --no-same-owner \
     && ln -s /usr/local/bin/node /usr/local/bin/nodejs; \
     else \
     echo "Building from source" \
@@ -93,20 +93,20 @@ RUN ARCH= && alpineArch="$(apk --print-arch)" \
     gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys "$key" || \
     gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "$key" ; \
     done \
-    && curl -fsSLO --compressed "https://nodejs.org/dist/v14.18.1/node-v14.18.1.tar.xz" \
-    && curl -fsSLO --compressed "https://nodejs.org/dist/v14.18.1/SHASUMS256.txt.asc" \
+    && curl -fsSLO --compressed "https://nodejs.org/dist/v14.18.2/node-v14.18.2.tar.xz" \
+    && curl -fsSLO --compressed "https://nodejs.org/dist/v14.18.2/SHASUMS256.txt.asc" \
     && gpg --batch --decrypt --output SHASUMS256.txt SHASUMS256.txt.asc \
-    && grep " node-v14.18.1.tar.xz\$" SHASUMS256.txt | sha256sum -c - \
-    && tar -xf "node-v14.18.1.tar.xz" \
-    && cd "node-v14.18.1" \
+    && grep " node-v14.18.2.tar.xz\$" SHASUMS256.txt | sha256sum -c - \
+    && tar -xf "node-v14.18.2.tar.xz" \
+    && cd "node-v14.18.2" \
     && ./configure \
     && make -j$(getconf _NPROCESSORS_ONLN) V= \
     && make install \
     && cd .. \
-    && rm -Rf "node-v14.18.1" \
-    && rm "node-v14.18.1.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt; \
+    && rm -Rf "node-v14.18.2" \
+    && rm "node-v14.18.2.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt; \
     fi \
-    && rm -f "node-v14.18.1-linux-$ARCH-musl.tar.xz"
+    && rm -f "node-v14.18.2-linux-$ARCH-musl.tar.xz"
 
 # avoid million NPM install messages
 ENV npm_config_loglevel warn
@@ -115,7 +115,7 @@ ENV npm_config_loglevel warn
 ENV npm_config_unsafe_perm true
 
 # install latest npm, regardless of node version, for speed and fixes
-RUN npm install -g npm@8.1.3
+RUN npm install -g npm@8.2.0
 
 RUN node --version \
     && npm --version

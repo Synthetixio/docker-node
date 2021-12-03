@@ -1,5 +1,5 @@
 
-FROM ubuntu:focal@sha256:3555f4996aea6be945ae1532fa377c88f4b3b9e6d93531f47af5d78a7d5e3761
+FROM ubuntu:focal@sha256:7cc0576c7c0ec2384de5cbf245f41567e922aab1b075f3e8ad565f508032df17
 
 ############### ENV SETUP ###############
 # husky workaround - https://github.com/typicode/husky/issues/821
@@ -109,7 +109,7 @@ ENV npm_config_loglevel warn
 ENV npm_config_unsafe_perm true
 
 # install latest npm, regardless of node version, for speed and fixes
-RUN npm install -g npm@8.1.3
+RUN npm install -g npm@8.2.0
 
 RUN node --version \
     && npm --version
