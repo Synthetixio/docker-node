@@ -1,7 +1,7 @@
 [
   {
     "distro": "alpine",
-    "nodeVersion": "12.22.7",
+    "nodeVersion": "12.22.8",
     "alpineVersion": 3.12,
     "alpineSha256": "74e5ad84a67e9b8ed7609b32dc2460b76175020923d7f494a73a851446222d18",
     "ubuntuVersion": "focal",
@@ -9,7 +9,7 @@
     "debianVersion": "stable-slim",
     "debianSha256": "997f667fcdaf6b867948222a7a4c6985e6bddb575cc4b02ffce848f8e20dba58",
     "yarnVersion": "1.22.17",
-    "npmVersion": "8.2.0",
+    "npmVersion": "8.3.0",
     "vercelVersion": "23.1.2",
     "file": "../output/alpine/12.22/Dockerfile"
   },
@@ -23,7 +23,7 @@
     "debianVersion": "stable-slim",
     "debianSha256": "997f667fcdaf6b867948222a7a4c6985e6bddb575cc4b02ffce848f8e20dba58",
     "yarnVersion": "1.22.17",
-    "npmVersion": "8.2.0",
+    "npmVersion": "8.3.0",
     "vercelVersion": "23.1.2",
     "file": "../output/alpine/14.18/Dockerfile"
   },
@@ -37,13 +37,13 @@
     "debianVersion": "stable-slim",
     "debianSha256": "997f667fcdaf6b867948222a7a4c6985e6bddb575cc4b02ffce848f8e20dba58",
     "yarnVersion": "1.22.17",
-    "npmVersion": "8.2.0",
+    "npmVersion": "8.3.0",
     "vercelVersion": "23.1.2",
     "file": "../output/alpine/16.13/Dockerfile"
   },
   {
     "distro": "alpine",
-    "nodeVersion": "17.2.0",
+    "nodeVersion": "17.3.0",
     "alpineVersion": 3.12,
     "alpineSha256": "74e5ad84a67e9b8ed7609b32dc2460b76175020923d7f494a73a851446222d18",
     "ubuntuVersion": "focal",
@@ -51,13 +51,13 @@
     "debianVersion": "stable-slim",
     "debianSha256": "997f667fcdaf6b867948222a7a4c6985e6bddb575cc4b02ffce848f8e20dba58",
     "yarnVersion": "1.22.17",
-    "npmVersion": "8.2.0",
+    "npmVersion": "8.3.0",
     "vercelVersion": "23.1.2",
-    "file": "../output/alpine/17.2/Dockerfile"
+    "file": "../output/alpine/17.3/Dockerfile"
   },
   {
     "distro": "ubuntu",
-    "nodeVersion": "12.22.7",
+    "nodeVersion": "12.22.8",
     "alpineVersion": 3.12,
     "alpineSha256": "74e5ad84a67e9b8ed7609b32dc2460b76175020923d7f494a73a851446222d18",
     "ubuntuVersion": "focal",
@@ -65,7 +65,7 @@
     "debianVersion": "stable-slim",
     "debianSha256": "997f667fcdaf6b867948222a7a4c6985e6bddb575cc4b02ffce848f8e20dba58",
     "yarnVersion": "1.22.17",
-    "npmVersion": "8.2.0",
+    "npmVersion": "8.3.0",
     "vercelVersion": "23.1.2",
     "file": "../output/ubuntu/12.22/Dockerfile"
   },
@@ -79,7 +79,7 @@
     "debianVersion": "stable-slim",
     "debianSha256": "997f667fcdaf6b867948222a7a4c6985e6bddb575cc4b02ffce848f8e20dba58",
     "yarnVersion": "1.22.17",
-    "npmVersion": "8.2.0",
+    "npmVersion": "8.3.0",
     "vercelVersion": "23.1.2",
     "file": "../output/ubuntu/14.18/Dockerfile"
   },
@@ -93,13 +93,13 @@
     "debianVersion": "stable-slim",
     "debianSha256": "997f667fcdaf6b867948222a7a4c6985e6bddb575cc4b02ffce848f8e20dba58",
     "yarnVersion": "1.22.17",
-    "npmVersion": "8.2.0",
+    "npmVersion": "8.3.0",
     "vercelVersion": "23.1.2",
     "file": "../output/ubuntu/16.13/Dockerfile"
   },
   {
     "distro": "ubuntu",
-    "nodeVersion": "17.2.0",
+    "nodeVersion": "17.3.0",
     "alpineVersion": 3.12,
     "alpineSha256": "74e5ad84a67e9b8ed7609b32dc2460b76175020923d7f494a73a851446222d18",
     "ubuntuVersion": "focal",
@@ -107,13 +107,13 @@
     "debianVersion": "stable-slim",
     "debianSha256": "997f667fcdaf6b867948222a7a4c6985e6bddb575cc4b02ffce848f8e20dba58",
     "yarnVersion": "1.22.17",
-    "npmVersion": "8.2.0",
+    "npmVersion": "8.3.0",
     "vercelVersion": "23.1.2",
-    "file": "../output/ubuntu/17.2/Dockerfile"
+    "file": "../output/ubuntu/17.3/Dockerfile"
   },
   {
     "distro": "debian",
-    "nodeVersion": "12.22.7",
+    "nodeVersion": "12.22.8",
     "alpineVersion": 3.12,
     "alpineSha256": "74e5ad84a67e9b8ed7609b32dc2460b76175020923d7f494a73a851446222d18",
     "ubuntuVersion": "focal",
@@ -121,7 +121,7 @@
     "debianVersion": "stable-slim",
     "debianSha256": "997f667fcdaf6b867948222a7a4c6985e6bddb575cc4b02ffce848f8e20dba58",
     "yarnVersion": "1.22.17",
-    "npmVersion": "8.2.0",
+    "npmVersion": "8.3.0",
     "vercelVersion": "23.1.2",
     "file": "../output/debian/12.22/Dockerfile"
   },
@@ -135,7 +135,7 @@
     "debianVersion": "stable-slim",
     "debianSha256": "997f667fcdaf6b867948222a7a4c6985e6bddb575cc4b02ffce848f8e20dba58",
     "yarnVersion": "1.22.17",
-    "npmVersion": "8.2.0",
+    "npmVersion": "8.3.0",
     "vercelVersion": "23.1.2",
     "file": "../output/debian/14.18/Dockerfile"
   },
@@ -149,13 +149,13 @@
     "debianVersion": "stable-slim",
     "debianSha256": "997f667fcdaf6b867948222a7a4c6985e6bddb575cc4b02ffce848f8e20dba58",
     "yarnVersion": "1.22.17",
-    "npmVersion": "8.2.0",
+    "npmVersion": "8.3.0",
     "vercelVersion": "23.1.2",
     "file": "../output/debian/16.13/Dockerfile"
   },
   {
     "distro": "debian",
-    "nodeVersion": "17.2.0",
+    "nodeVersion": "17.3.0",
     "alpineVersion": 3.12,
     "alpineSha256": "74e5ad84a67e9b8ed7609b32dc2460b76175020923d7f494a73a851446222d18",
     "ubuntuVersion": "focal",
@@ -163,8 +163,8 @@
     "debianVersion": "stable-slim",
     "debianSha256": "997f667fcdaf6b867948222a7a4c6985e6bddb575cc4b02ffce848f8e20dba58",
     "yarnVersion": "1.22.17",
-    "npmVersion": "8.2.0",
+    "npmVersion": "8.3.0",
     "vercelVersion": "23.1.2",
-    "file": "../output/debian/17.2/Dockerfile"
+    "file": "../output/debian/17.3/Dockerfile"
   }
 ]
