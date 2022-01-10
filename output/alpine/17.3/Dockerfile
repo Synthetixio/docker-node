@@ -123,10 +123,6 @@ RUN node --version \
 # lock dependencies by default
 RUN npm config set save-exact=true
 
-# vercel setup
-RUN npm install -g vercel@23.1.2
-RUN vercel --version
-
 ############### YARN SETUP ###############
 RUN set -ex \
     && for key in \
