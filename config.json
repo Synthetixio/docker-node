@@ -8,6 +8,5 @@
   "debianVersion": "stable-slim",
   "debianSha256": "997f667fcdaf6b867948222a7a4c6985e6bddb575cc4b02ffce848f8e20dba58",
   "yarnVersion": "1.22.17",
-  "npmVersion": "8.3.0",
-  "vercelVersion": "23.1.2"
+  "npmVersion": "8.3.0"
 }
