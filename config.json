@@ -8,5 +8,5 @@
   "debianVersion": "stable-slim",
   "debianSha256": "3ecce669b6be99312305bc3acc90f91232880c68b566f257ae66647e9414174f",
   "yarnVersion": "1.22.17",
-  "npmVersion": "8.5.0"
+  "npmVersion": "8.5.1"
 }
