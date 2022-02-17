@@ -1,8 +1,8 @@
 {
   "distro": ["alpine", "ubuntu", "debian"],
   "nodeVersion": ["12.22.10", "14.19.0", "16.14.0", "17.5.0"],
-  "alpineVersion": 3.12,
-  "alpineSha256": "74e5ad84a67e9b8ed7609b32dc2460b76175020923d7f494a73a851446222d18",
+  "alpineVersion": 3.15,
+  "alpineSha256": "e7d88de73db3d3fd9b2d63aa7f447a10fd0220b7cbf39803c803f2af9ba256b3",
   "ubuntuVersion": "focal",
   "ubuntuSha256": "7c9c7fed23def3653a0da5bc9ecb651efe155ebd5802c7ba5d585edaa6c89496",
   "debianVersion": "stable-slim",
