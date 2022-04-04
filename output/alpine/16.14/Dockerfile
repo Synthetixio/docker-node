@@ -64,15 +64,15 @@ RUN ARCH= && alpineArch="$(apk --print-arch)" \
     && case "${alpineArch##*-}" in \
     x86_64) \
     ARCH='x64' \
-    CHECKSUM="36708b3daa37f9eda5f732cec40690d1338c3c376c0f0ec3c9cb46c6cdf52f1b" \
+    CHECKSUM="a6dc255e1ef1f20372306eec932b4a3648575c6d3024bcd685b8efc93dc95569" \
     ;; \
     *) ;; \
     esac \
     && if [ -n "${CHECKSUM}" ]; then \
     set -eu; \
-    curl -fsSLO --compressed "https://unofficial-builds.nodejs.org/download/release/v16.14.0/node-v16.14.0-linux-$ARCH-musl.tar.xz"; \
-    echo "$CHECKSUM  node-v16.14.0-linux-$ARCH-musl.tar.xz" | sha256sum -c - \
-    && tar -xJf "node-v16.14.0-linux-$ARCH-musl.tar.xz" -C /usr/local --strip-components=1 --no-same-owner \
+    curl -fsSLO --compressed "https://unofficial-builds.nodejs.org/download/release/v16.14.2/node-v16.14.2-linux-$ARCH-musl.tar.xz"; \
+    echo "$CHECKSUM  node-v16.14.2-linux-$ARCH-musl.tar.xz" | sha256sum -c - \
+    && tar -xJf "node-v16.14.2-linux-$ARCH-musl.tar.xz" -C /usr/local --strip-components=1 --no-same-owner \
     && ln -s /usr/local/bin/node /usr/local/bin/nodejs; \
     else \
     echo "Building from source" \
@@ -93,20 +93,20 @@ RUN ARCH= && alpineArch="$(apk --print-arch)" \
     gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys "$key" || \
     gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "$key" ; \
     done \
-    && curl -fsSLO --compressed "https://nodejs.org/dist/v16.14.0/node-v16.14.0.tar.xz" \
-    && curl -fsSLO --compressed "https://nodejs.org/dist/v16.14.0/SHASUMS256.txt.asc" \
+    && curl -fsSLO --compressed "https://nodejs.org/dist/v16.14.2/node-v16.14.2.tar.xz" \
+    && curl -fsSLO --compressed "https://nodejs.org/dist/v16.14.2/SHASUMS256.txt.asc" \
     && gpg --batch --decrypt --output SHASUMS256.txt SHASUMS256.txt.asc \
-    && grep " node-v16.14.0.tar.xz\$" SHASUMS256.txt | sha256sum -c - \
-    && tar -xf "node-v16.14.0.tar.xz" \
-    && cd "node-v16.14.0" \
+    && grep " node-v16.14.2.tar.xz\$" SHASUMS256.txt | sha256sum -c - \
+    && tar -xf "node-v16.14.2.tar.xz" \
+    && cd "node-v16.14.2" \
     && ./configure \
     && make -j$(getconf _NPROCESSORS_ONLN) V= \
     && make install \
     && cd .. \
-    && rm -Rf "node-v16.14.0" \
-    && rm "node-v16.14.0.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt; \
+    && rm -Rf "node-v16.14.2" \
+    && rm "node-v16.14.2.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt; \
     fi \
-    && rm -f "node-v16.14.0-linux-$ARCH-musl.tar.xz"
+    && rm -f "node-v16.14.2-linux-$ARCH-musl.tar.xz"
 
 # avoid million NPM install messages
 ENV npm_config_loglevel warn
@@ -115,7 +115,7 @@ ENV npm_config_loglevel warn
 ENV npm_config_unsafe_perm true
 
 # install latest npm, regardless of node version, for speed and fixes
-RUN npm install -g npm@8.5.1
+RUN npm install -g npm@8.6.0
 
 RUN node --version \
     && npm --version
@@ -131,14 +131,14 @@ RUN set -ex \
     gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys "$key" || \
     gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "$key" ; \
     done \
-    && curl -fsSLO --compressed "https://yarnpkg.com/downloads/1.22.17/yarn-v1.22.17.tar.gz" \
-    && curl -fsSLO --compressed "https://yarnpkg.com/downloads/1.22.17/yarn-v1.22.17.tar.gz.asc" \
-    && gpg --batch --verify yarn-v1.22.17.tar.gz.asc yarn-v1.22.17.tar.gz \
+    && curl -fsSLO --compressed "https://yarnpkg.com/downloads/1.22.18/yarn-v1.22.18.tar.gz" \
+    && curl -fsSLO --compressed "https://yarnpkg.com/downloads/1.22.18/yarn-v1.22.18.tar.gz.asc" \
+    && gpg --batch --verify yarn-v1.22.18.tar.gz.asc yarn-v1.22.18.tar.gz \
     && mkdir -p /opt \
-    && tar -xzf yarn-v1.22.17.tar.gz -C /opt/ \
-    && ln -s /opt/yarn-v1.22.17/bin/yarn /usr/local/bin/yarn \
-    && ln -s /opt/yarn-v1.22.17/bin/yarnpkg /usr/local/bin/yarnpkg \
-    && rm yarn-v1.22.17.tar.gz.asc yarn-v1.22.17.tar.gz
+    && tar -xzf yarn-v1.22.18.tar.gz -C /opt/ \
+    && ln -s /opt/yarn-v1.22.18/bin/yarn /usr/local/bin/yarn \
+    && ln -s /opt/yarn-v1.22.18/bin/yarnpkg /usr/local/bin/yarnpkg \
+    && rm yarn-v1.22.18.tar.gz.asc yarn-v1.22.18.tar.gz
 RUN yarn --version
 
 ############### WRAPPING UP ###############

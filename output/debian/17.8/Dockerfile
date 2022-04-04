@@ -1,5 +1,5 @@
 
-FROM alpine:3.12@sha256:74e5ad84a67e9b8ed7609b32dc2460b76175020923d7f494a73a851446222d18
+FROM debian:stable-slim@sha256:3ecce669b6be99312305bc3acc90f91232880c68b566f257ae66647e9414174f
 
 ############### ENV SETUP ###############
 # husky workaround - https://github.com/typicode/husky/issues/821
@@ -19,20 +19,16 @@ ENV NPM_CONFIG_PRODUCTION false
 ENV YARN_PRODUCTION false
 
 ############### INSTALL DEPS ###############
-RUN apk add --no-cache \
-    libstdc++ \
-    py3-pip \
-    py3-setuptools \
-    libgcc \
-    linux-headers \
-    tar \
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    locales \
+    software-properties-common \
+    python3-distutils \
+    python3-apt \
+    python3-dev \
+    build-essential \
+    openssh-server \
     # mozjpeg dependencies
-    tiff \
-    jpeg \
-    zlib \
-    zlib-dev \
-    coreutils \
-    openssh \
     autoconf \
     automake \
     libtool \
@@ -52,31 +48,36 @@ RUN apk add --no-cache \
     wget \
     binutils-gold \
     gnupg \
-    && echo "Finished installing packages"
+    && rm -rf /var/lib/apt/lists/* /var/cache/apt/*
+# locale setup
+RUN localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8
+ENV LANG en_US.utf8
+
+############### PYTHON SETUP ###############
+# install pip
+RUN curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+RUN python3 get-pip.py
+# add local python dir to path
+ENV PATH $PATH:/root/.local/bin
 
 ############### NODE SETUP ###############
 # create new node user
-RUN addgroup -g 1000 node \
-    && adduser -u 1000 -G node -s /bin/sh -D node
+RUN groupadd --gid 1000 node \
+    && useradd --uid 1000 --gid node --shell /bin/bash --create-home node
 
 # node setup
-RUN ARCH= && alpineArch="$(apk --print-arch)" \
-    && case "${alpineArch##*-}" in \
-    x86_64) \
-    ARCH='x64' \
-    CHECKSUM="8f4f13abbaf553b102984dc68d2d0c66a12084fbb2a211416e1aaedaaf6eae64" \
-    ;; \
-    *) ;; \
+RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
+    && case "${dpkgArch##*-}" in \
+    amd64) ARCH='x64';; \
+    ppc64el) ARCH='ppc64le';; \
+    s390x) ARCH='s390x';; \
+    arm64) ARCH='arm64';; \
+    armhf) ARCH='armv7l';; \
+    i386) ARCH='x86';; \
+    *) echo "unsupported architecture"; exit 1 ;; \
     esac \
-    && if [ -n "${CHECKSUM}" ]; then \
-    set -eu; \
-    curl -fsSLO --compressed "https://unofficial-builds.nodejs.org/download/release/v17.5.0/node-v17.5.0-linux-$ARCH-musl.tar.xz"; \
-    echo "$CHECKSUM  node-v17.5.0-linux-$ARCH-musl.tar.xz" | sha256sum -c - \
-    && tar -xJf "node-v17.5.0-linux-$ARCH-musl.tar.xz" -C /usr/local --strip-components=1 --no-same-owner \
-    && ln -s /usr/local/bin/node /usr/local/bin/nodejs; \
-    else \
-    echo "Building from source" \
     # gpg keys listed at https://github.com/nodejs/node#release-keys
+    && set -ex \
     && for key in \
     4ED778F539E3634C779C87C6D7062848A1AB005C \
     94AE36675C464D64BAFA68DD7434390BDBE9B9C5 \
@@ -93,20 +94,13 @@ RUN ARCH= && alpineArch="$(apk --print-arch)" \
     gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys "$key" || \
     gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "$key" ; \
     done \
-    && curl -fsSLO --compressed "https://nodejs.org/dist/v17.5.0/node-v17.5.0.tar.xz" \
-    && curl -fsSLO --compressed "https://nodejs.org/dist/v17.5.0/SHASUMS256.txt.asc" \
+    && curl -fsSLO --compressed "https://nodejs.org/dist/v17.8.0/node-v17.8.0-linux-$ARCH.tar.xz" \
+    && curl -fsSLO --compressed "https://nodejs.org/dist/v17.8.0/SHASUMS256.txt.asc" \
     && gpg --batch --decrypt --output SHASUMS256.txt SHASUMS256.txt.asc \
-    && grep " node-v17.5.0.tar.xz\$" SHASUMS256.txt | sha256sum -c - \
-    && tar -xf "node-v17.5.0.tar.xz" \
-    && cd "node-v17.5.0" \
-    && ./configure \
-    && make -j$(getconf _NPROCESSORS_ONLN) V= \
-    && make install \
-    && cd .. \
-    && rm -Rf "node-v17.5.0" \
-    && rm "node-v17.5.0.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt; \
-    fi \
-    && rm -f "node-v17.5.0-linux-$ARCH-musl.tar.xz"
+    && grep " node-v17.8.0-linux-$ARCH.tar.xz\$" SHASUMS256.txt | sha256sum -c - \
+    && tar -xJf "node-v17.8.0-linux-$ARCH.tar.xz" -C /usr/local --strip-components=1 --no-same-owner \
+    && rm "node-v17.8.0-linux-$ARCH.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt \
+    && ln -s /usr/local/bin/node /usr/local/bin/nodejs
 
 # avoid million NPM install messages
 ENV npm_config_loglevel warn
@@ -115,7 +109,7 @@ ENV npm_config_loglevel warn
 ENV npm_config_unsafe_perm true
 
 # install latest npm, regardless of node version, for speed and fixes
-RUN npm install -g npm@8.5.1
+RUN npm install -g npm@8.6.0
 
 RUN node --version \
     && npm --version
@@ -131,14 +125,14 @@ RUN set -ex \
     gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys "$key" || \
     gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "$key" ; \
     done \
-    && curl -fsSLO --compressed "https://yarnpkg.com/downloads/1.22.17/yarn-v1.22.17.tar.gz" \
-    && curl -fsSLO --compressed "https://yarnpkg.com/downloads/1.22.17/yarn-v1.22.17.tar.gz.asc" \
-    && gpg --batch --verify yarn-v1.22.17.tar.gz.asc yarn-v1.22.17.tar.gz \
+    && curl -fsSLO --compressed "https://yarnpkg.com/downloads/1.22.18/yarn-v1.22.18.tar.gz" \
+    && curl -fsSLO --compressed "https://yarnpkg.com/downloads/1.22.18/yarn-v1.22.18.tar.gz.asc" \
+    && gpg --batch --verify yarn-v1.22.18.tar.gz.asc yarn-v1.22.18.tar.gz \
     && mkdir -p /opt \
-    && tar -xzf yarn-v1.22.17.tar.gz -C /opt/ \
-    && ln -s /opt/yarn-v1.22.17/bin/yarn /usr/local/bin/yarn \
-    && ln -s /opt/yarn-v1.22.17/bin/yarnpkg /usr/local/bin/yarnpkg \
-    && rm yarn-v1.22.17.tar.gz.asc yarn-v1.22.17.tar.gz
+    && tar -xzf yarn-v1.22.18.tar.gz -C /opt/ \
+    && ln -s /opt/yarn-v1.22.18/bin/yarn /usr/local/bin/yarn \
+    && ln -s /opt/yarn-v1.22.18/bin/yarnpkg /usr/local/bin/yarnpkg \
+    && rm yarn-v1.22.18.tar.gz.asc yarn-v1.22.18.tar.gz
 RUN yarn --version
 
 ############### WRAPPING UP ###############
