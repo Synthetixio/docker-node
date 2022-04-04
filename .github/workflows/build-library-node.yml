@@ -12,7 +12,7 @@ jobs:
   build_and_push:
     strategy:
       matrix:
-        node: ["12.22", "14.19", "16.14", "17.5"]
+        node: ["12.22", "14.19", "16.14", "17.8"]
         distro: [alpine, debian, ubuntu]
     runs-on: ubuntu-latest
     steps:
