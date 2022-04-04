@@ -100,14 +100,14 @@ RUN ARCH= && alpineArch="$(apk --print-arch)" \
     && case "${alpineArch##*-}" in \
     x86_64) \
     ARCH='x64' \
-{%- if nodeVersion === "12.22.10" %}
-    CHECKSUM="ec1e2f0c33a495002ffb1647159d8e17643e2f229c0f4fe2c1be33398f56b5f4" \
-{%- elif nodeVersion === "14.19.0" %}
-    CHECKSUM="8d5e638d88b62de2f147dee812a5d74e4860a20468eb7ff32c41a02b58e2aebf" \
-{%- elif nodeVersion === "16.14.0" %}
-    CHECKSUM="36708b3daa37f9eda5f732cec40690d1338c3c376c0f0ec3c9cb46c6cdf52f1b" \
-{%- elif nodeVersion === "17.5.0" %}
-    CHECKSUM="8f4f13abbaf553b102984dc68d2d0c66a12084fbb2a211416e1aaedaaf6eae64" \
+{%- if nodeVersion === "12.22.11" %}
+    CHECKSUM="c30c9ba214a8eb2db6199db9147f14ff2cbb0fc07e4517e3a8758f213cc71128" \
+{%- elif nodeVersion === "14.19.1" %}
+    CHECKSUM="094790128069eccc9534214e7435c70bcafa221a0ef0f229c59418f8762704fa" \
+{%- elif nodeVersion === "16.14.2" %}
+    CHECKSUM="a6dc255e1ef1f20372306eec932b4a3648575c6d3024bcd685b8efc93dc95569" \
+{%- elif nodeVersion === "17.8.0" %}
+    CHECKSUM="faf0dd5ceb4b273b2f50af442cf461cc9d16f9b3ca7ef1006bb8ec1109e8c1cb" \
 {%- endif %}
     ;; \
     *) ;; \
