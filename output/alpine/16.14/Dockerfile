@@ -145,4 +145,5 @@ RUN yarn --version
 ############### WRAPPING UP ###############
 COPY docker-entrypoint.sh /usr/local/bin/
 ENTRYPOINT ["docker-entrypoint.sh"]
+USER node
 CMD ["node"]
