@@ -136,6 +136,9 @@ RUN set -ex \
     && rm yarn-v1.22.18.tar.gz.asc yarn-v1.22.18.tar.gz
 RUN yarn --version
 
+# pm2 setup
+RUN npm install -g pm2@5.2.0
+
 ############### WRAPPING UP ###############
 COPY docker-entrypoint.sh /usr/local/bin/
 ENTRYPOINT ["docker-entrypoint.sh"]

@@ -10,6 +10,7 @@
     "debianSha256": "3ecce669b6be99312305bc3acc90f91232880c68b566f257ae66647e9414174f",
     "yarnVersion": "1.22.18",
     "npmVersion": "8.6.0",
+    "pm2Version": "5.2.0",
     "file": "../output/alpine/12.22/Dockerfile"
   },
   {
@@ -23,6 +24,7 @@
     "debianSha256": "3ecce669b6be99312305bc3acc90f91232880c68b566f257ae66647e9414174f",
     "yarnVersion": "1.22.18",
     "npmVersion": "8.6.0",
+    "pm2Version": "5.2.0",
     "file": "../output/alpine/14.19/Dockerfile"
   },
   {
@@ -36,6 +38,7 @@
     "debianSha256": "3ecce669b6be99312305bc3acc90f91232880c68b566f257ae66647e9414174f",
     "yarnVersion": "1.22.18",
     "npmVersion": "8.6.0",
+    "pm2Version": "5.2.0",
     "file": "../output/alpine/16.14/Dockerfile"
   },
   {
@@ -49,6 +52,7 @@
     "debianSha256": "3ecce669b6be99312305bc3acc90f91232880c68b566f257ae66647e9414174f",
     "yarnVersion": "1.22.18",
     "npmVersion": "8.6.0",
+    "pm2Version": "5.2.0",
     "file": "../output/alpine/17.8/Dockerfile"
   },
   {
@@ -62,6 +66,7 @@
     "debianSha256": "3ecce669b6be99312305bc3acc90f91232880c68b566f257ae66647e9414174f",
     "yarnVersion": "1.22.18",
     "npmVersion": "8.6.0",
+    "pm2Version": "5.2.0",
     "file": "../output/ubuntu/12.22/Dockerfile"
   },
   {
@@ -75,6 +80,7 @@
     "debianSha256": "3ecce669b6be99312305bc3acc90f91232880c68b566f257ae66647e9414174f",
     "yarnVersion": "1.22.18",
     "npmVersion": "8.6.0",
+    "pm2Version": "5.2.0",
     "file": "../output/ubuntu/14.19/Dockerfile"
   },
   {
@@ -88,6 +94,7 @@
     "debianSha256": "3ecce669b6be99312305bc3acc90f91232880c68b566f257ae66647e9414174f",
     "yarnVersion": "1.22.18",
     "npmVersion": "8.6.0",
+    "pm2Version": "5.2.0",
     "file": "../output/ubuntu/16.14/Dockerfile"
   },
   {
@@ -101,6 +108,7 @@
     "debianSha256": "3ecce669b6be99312305bc3acc90f91232880c68b566f257ae66647e9414174f",
     "yarnVersion": "1.22.18",
     "npmVersion": "8.6.0",
+    "pm2Version": "5.2.0",
     "file": "../output/ubuntu/17.8/Dockerfile"
   },
   {
@@ -114,6 +122,7 @@
     "debianSha256": "3ecce669b6be99312305bc3acc90f91232880c68b566f257ae66647e9414174f",
     "yarnVersion": "1.22.18",
     "npmVersion": "8.6.0",
+    "pm2Version": "5.2.0",
     "file": "../output/debian/12.22/Dockerfile"
   },
   {
@@ -127,6 +136,7 @@
     "debianSha256": "3ecce669b6be99312305bc3acc90f91232880c68b566f257ae66647e9414174f",
     "yarnVersion": "1.22.18",
     "npmVersion": "8.6.0",
+    "pm2Version": "5.2.0",
     "file": "../output/debian/14.19/Dockerfile"
   },
   {
@@ -140,6 +150,7 @@
     "debianSha256": "3ecce669b6be99312305bc3acc90f91232880c68b566f257ae66647e9414174f",
     "yarnVersion": "1.22.18",
     "npmVersion": "8.6.0",
+    "pm2Version": "5.2.0",
     "file": "../output/debian/16.14/Dockerfile"
   },
   {
@@ -153,6 +164,7 @@
     "debianSha256": "3ecce669b6be99312305bc3acc90f91232880c68b566f257ae66647e9414174f",
     "yarnVersion": "1.22.18",
     "npmVersion": "8.6.0",
+    "pm2Version": "5.2.0",
     "file": "../output/debian/17.8/Dockerfile"
   }
 ]
