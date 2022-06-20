@@ -1,5 +1,5 @@
 
-FROM ubuntu:focal@sha256:7c9c7fed23def3653a0da5bc9ecb651efe155ebd5802c7ba5d585edaa6c89496
+FROM debian:stable-slim@sha256:3ecce669b6be99312305bc3acc90f91232880c68b566f257ae66647e9414174f
 
 ############### ENV SETUP ###############
 # husky workaround - https://github.com/typicode/husky/issues/821
@@ -95,12 +95,12 @@ RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
     gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys "$key" || \
     gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "$key" ; \
     done \
-    && curl -fsSLO --compressed "https://nodejs.org/dist/v16.14.2/node-v16.14.2-linux-$ARCH.tar.xz" \
-    && curl -fsSLO --compressed "https://nodejs.org/dist/v16.14.2/SHASUMS256.txt.asc" \
+    && curl -fsSLO --compressed "https://nodejs.org/dist/v16.15.1/node-v16.15.1-linux-$ARCH.tar.xz" \
+    && curl -fsSLO --compressed "https://nodejs.org/dist/v16.15.1/SHASUMS256.txt.asc" \
     && gpg --batch --decrypt --output SHASUMS256.txt SHASUMS256.txt.asc \
-    && grep " node-v16.14.2-linux-$ARCH.tar.xz\$" SHASUMS256.txt | sha256sum -c - \
-    && tar -xJf "node-v16.14.2-linux-$ARCH.tar.xz" -C /usr/local --strip-components=1 --no-same-owner \
-    && rm "node-v16.14.2-linux-$ARCH.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt \
+    && grep " node-v16.15.1-linux-$ARCH.tar.xz\$" SHASUMS256.txt | sha256sum -c - \
+    && tar -xJf "node-v16.15.1-linux-$ARCH.tar.xz" -C /usr/local --strip-components=1 --no-same-owner \
+    && rm "node-v16.15.1-linux-$ARCH.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt \
     && ln -s /usr/local/bin/node /usr/local/bin/nodejs
 
 # avoid million NPM install messages
@@ -110,7 +110,7 @@ ENV npm_config_loglevel warn
 ENV npm_config_unsafe_perm true
 
 # install latest npm, regardless of node version, for speed and fixes
-RUN npm install -g npm@8.6.0
+RUN npm install -g npm@8.12.2
 
 RUN node --version \
     && npm --version
@@ -126,14 +126,14 @@ RUN set -ex \
     gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys "$key" || \
     gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "$key" ; \
     done \
-    && curl -fsSLO --compressed "https://yarnpkg.com/downloads/1.22.18/yarn-v1.22.18.tar.gz" \
-    && curl -fsSLO --compressed "https://yarnpkg.com/downloads/1.22.18/yarn-v1.22.18.tar.gz.asc" \
-    && gpg --batch --verify yarn-v1.22.18.tar.gz.asc yarn-v1.22.18.tar.gz \
+    && curl -fsSLO --compressed "https://yarnpkg.com/downloads/1.22.19/yarn-v1.22.19.tar.gz" \
+    && curl -fsSLO --compressed "https://yarnpkg.com/downloads/1.22.19/yarn-v1.22.19.tar.gz.asc" \
+    && gpg --batch --verify yarn-v1.22.19.tar.gz.asc yarn-v1.22.19.tar.gz \
     && mkdir -p /opt \
-    && tar -xzf yarn-v1.22.18.tar.gz -C /opt/ \
-    && ln -s /opt/yarn-v1.22.18/bin/yarn /usr/local/bin/yarn \
-    && ln -s /opt/yarn-v1.22.18/bin/yarnpkg /usr/local/bin/yarnpkg \
-    && rm yarn-v1.22.18.tar.gz.asc yarn-v1.22.18.tar.gz
+    && tar -xzf yarn-v1.22.19.tar.gz -C /opt/ \
+    && ln -s /opt/yarn-v1.22.19/bin/yarn /usr/local/bin/yarn \
+    && ln -s /opt/yarn-v1.22.19/bin/yarnpkg /usr/local/bin/yarnpkg \
+    && rm yarn-v1.22.19.tar.gz.asc yarn-v1.22.19.tar.gz
 RUN yarn --version
 
 # pm2 setup

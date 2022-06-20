@@ -64,15 +64,15 @@ RUN ARCH= && alpineArch="$(apk --print-arch)" \
     && case "${alpineArch##*-}" in \
     x86_64) \
     ARCH='x64' \
-    CHECKSUM="c30c9ba214a8eb2db6199db9147f14ff2cbb0fc07e4517e3a8758f213cc71128" \
+    CHECKSUM="3acef00c21ca044a74710a56492c40d715ea5a707ce8629d6df2415f3cf89fec" \
     ;; \
     *) ;; \
     esac \
     && if [ -n "${CHECKSUM}" ]; then \
     set -eu; \
-    curl -fsSLO --compressed "https://unofficial-builds.nodejs.org/download/release/v12.22.11/node-v12.22.11-linux-$ARCH-musl.tar.xz"; \
-    echo "$CHECKSUM  node-v12.22.11-linux-$ARCH-musl.tar.xz" | sha256sum -c - \
-    && tar -xJf "node-v12.22.11-linux-$ARCH-musl.tar.xz" -C /usr/local --strip-components=1 --no-same-owner \
+    curl -fsSLO --compressed "https://unofficial-builds.nodejs.org/download/release/v16.15.1/node-v16.15.1-linux-$ARCH-musl.tar.xz"; \
+    echo "$CHECKSUM  node-v16.15.1-linux-$ARCH-musl.tar.xz" | sha256sum -c - \
+    && tar -xJf "node-v16.15.1-linux-$ARCH-musl.tar.xz" -C /usr/local --strip-components=1 --no-same-owner \
     && ln -s /usr/local/bin/node /usr/local/bin/nodejs; \
     else \
     echo "Building from source" \
@@ -94,20 +94,20 @@ RUN ARCH= && alpineArch="$(apk --print-arch)" \
     gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys "$key" || \
     gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "$key" ; \
     done \
-    && curl -fsSLO --compressed "https://nodejs.org/dist/v12.22.11/node-v12.22.11.tar.xz" \
-    && curl -fsSLO --compressed "https://nodejs.org/dist/v12.22.11/SHASUMS256.txt.asc" \
+    && curl -fsSLO --compressed "https://nodejs.org/dist/v16.15.1/node-v16.15.1.tar.xz" \
+    && curl -fsSLO --compressed "https://nodejs.org/dist/v16.15.1/SHASUMS256.txt.asc" \
     && gpg --batch --decrypt --output SHASUMS256.txt SHASUMS256.txt.asc \
-    && grep " node-v12.22.11.tar.xz\$" SHASUMS256.txt | sha256sum -c - \
-    && tar -xf "node-v12.22.11.tar.xz" \
-    && cd "node-v12.22.11" \
+    && grep " node-v16.15.1.tar.xz\$" SHASUMS256.txt | sha256sum -c - \
+    && tar -xf "node-v16.15.1.tar.xz" \
+    && cd "node-v16.15.1" \
     && ./configure \
     && make -j$(getconf _NPROCESSORS_ONLN) V= \
     && make install \
     && cd .. \
-    && rm -Rf "node-v12.22.11" \
-    && rm "node-v12.22.11.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt; \
+    && rm -Rf "node-v16.15.1" \
+    && rm "node-v16.15.1.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt; \
     fi \
-    && rm -f "node-v12.22.11-linux-$ARCH-musl.tar.xz"
+    && rm -f "node-v16.15.1-linux-$ARCH-musl.tar.xz"
 
 # avoid million NPM install messages
 ENV npm_config_loglevel warn
@@ -116,7 +116,7 @@ ENV npm_config_loglevel warn
 ENV npm_config_unsafe_perm true
 
 # install latest npm, regardless of node version, for speed and fixes
-RUN npm install -g npm@8.6.0
+RUN npm install -g npm@8.12.2
 
 RUN node --version \
     && npm --version
@@ -132,14 +132,14 @@ RUN set -ex \
     gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys "$key" || \
     gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "$key" ; \
     done \
-    && curl -fsSLO --compressed "https://yarnpkg.com/downloads/1.22.18/yarn-v1.22.18.tar.gz" \
-    && curl -fsSLO --compressed "https://yarnpkg.com/downloads/1.22.18/yarn-v1.22.18.tar.gz.asc" \
-    && gpg --batch --verify yarn-v1.22.18.tar.gz.asc yarn-v1.22.18.tar.gz \
+    && curl -fsSLO --compressed "https://yarnpkg.com/downloads/1.22.19/yarn-v1.22.19.tar.gz" \
+    && curl -fsSLO --compressed "https://yarnpkg.com/downloads/1.22.19/yarn-v1.22.19.tar.gz.asc" \
+    && gpg --batch --verify yarn-v1.22.19.tar.gz.asc yarn-v1.22.19.tar.gz \
     && mkdir -p /opt \
-    && tar -xzf yarn-v1.22.18.tar.gz -C /opt/ \
-    && ln -s /opt/yarn-v1.22.18/bin/yarn /usr/local/bin/yarn \
-    && ln -s /opt/yarn-v1.22.18/bin/yarnpkg /usr/local/bin/yarnpkg \
-    && rm yarn-v1.22.18.tar.gz.asc yarn-v1.22.18.tar.gz
+    && tar -xzf yarn-v1.22.19.tar.gz -C /opt/ \
+    && ln -s /opt/yarn-v1.22.19/bin/yarn /usr/local/bin/yarn \
+    && ln -s /opt/yarn-v1.22.19/bin/yarnpkg /usr/local/bin/yarnpkg \
+    && rm yarn-v1.22.19.tar.gz.asc yarn-v1.22.19.tar.gz
 RUN yarn --version
 
 # pm2 setup
