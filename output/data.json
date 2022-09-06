@@ -1,7 +1,7 @@
 [
   {
     "distro": "alpine",
-    "nodeVersion": "14.19.3",
+    "nodeVersion": "14.20.0",
     "alpineVersion": 3.12,
     "alpineSha256": "74e5ad84a67e9b8ed7609b32dc2460b76175020923d7f494a73a851446222d18",
     "ubuntuVersion": "focal",
@@ -9,13 +9,13 @@
     "debianVersion": "stable-slim",
     "debianSha256": "3ecce669b6be99312305bc3acc90f91232880c68b566f257ae66647e9414174f",
     "yarnVersion": "1.22.19",
-    "npmVersion": "8.12.2",
+    "npmVersion": "8.19.1",
     "pm2Version": "5.2.0",
-    "file": "../output/alpine/14.19/Dockerfile"
+    "file": "../output/alpine/14.20/Dockerfile"
   },
   {
     "distro": "alpine",
-    "nodeVersion": "16.15.1",
+    "nodeVersion": "16.17.0",
     "alpineVersion": 3.12,
     "alpineSha256": "74e5ad84a67e9b8ed7609b32dc2460b76175020923d7f494a73a851446222d18",
     "ubuntuVersion": "focal",
@@ -23,13 +23,13 @@
     "debianVersion": "stable-slim",
     "debianSha256": "3ecce669b6be99312305bc3acc90f91232880c68b566f257ae66647e9414174f",
     "yarnVersion": "1.22.19",
-    "npmVersion": "8.12.2",
+    "npmVersion": "8.19.1",
     "pm2Version": "5.2.0",
-    "file": "../output/alpine/16.15/Dockerfile"
+    "file": "../output/alpine/16.17/Dockerfile"
   },
   {
     "distro": "alpine",
-    "nodeVersion": "18.4.0",
+    "nodeVersion": "18.8.0",
     "alpineVersion": 3.12,
     "alpineSha256": "74e5ad84a67e9b8ed7609b32dc2460b76175020923d7f494a73a851446222d18",
     "ubuntuVersion": "focal",
@@ -37,13 +37,13 @@
     "debianVersion": "stable-slim",
     "debianSha256": "3ecce669b6be99312305bc3acc90f91232880c68b566f257ae66647e9414174f",
     "yarnVersion": "1.22.19",
-    "npmVersion": "8.12.2",
+    "npmVersion": "8.19.1",
     "pm2Version": "5.2.0",
-    "file": "../output/alpine/18.4/Dockerfile"
+    "file": "../output/alpine/18.8/Dockerfile"
   },
   {
     "distro": "ubuntu",
-    "nodeVersion": "14.19.3",
+    "nodeVersion": "14.20.0",
     "alpineVersion": 3.12,
     "alpineSha256": "74e5ad84a67e9b8ed7609b32dc2460b76175020923d7f494a73a851446222d18",
     "ubuntuVersion": "focal",
@@ -51,13 +51,13 @@
     "debianVersion": "stable-slim",
     "debianSha256": "3ecce669b6be99312305bc3acc90f91232880c68b566f257ae66647e9414174f",
     "yarnVersion": "1.22.19",
-    "npmVersion": "8.12.2",
+    "npmVersion": "8.19.1",
     "pm2Version": "5.2.0",
-    "file": "../output/ubuntu/14.19/Dockerfile"
+    "file": "../output/ubuntu/14.20/Dockerfile"
   },
   {
     "distro": "ubuntu",
-    "nodeVersion": "16.15.1",
+    "nodeVersion": "16.17.0",
     "alpineVersion": 3.12,
     "alpineSha256": "74e5ad84a67e9b8ed7609b32dc2460b76175020923d7f494a73a851446222d18",
     "ubuntuVersion": "focal",
@@ -65,13 +65,13 @@
     "debianVersion": "stable-slim",
     "debianSha256": "3ecce669b6be99312305bc3acc90f91232880c68b566f257ae66647e9414174f",
     "yarnVersion": "1.22.19",
-    "npmVersion": "8.12.2",
+    "npmVersion": "8.19.1",
     "pm2Version": "5.2.0",
-    "file": "../output/ubuntu/16.15/Dockerfile"
+    "file": "../output/ubuntu/16.17/Dockerfile"
   },
   {
     "distro": "ubuntu",
-    "nodeVersion": "18.4.0",
+    "nodeVersion": "18.8.0",
     "alpineVersion": 3.12,
     "alpineSha256": "74e5ad84a67e9b8ed7609b32dc2460b76175020923d7f494a73a851446222d18",
     "ubuntuVersion": "focal",
@@ -79,13 +79,13 @@
     "debianVersion": "stable-slim",
     "debianSha256": "3ecce669b6be99312305bc3acc90f91232880c68b566f257ae66647e9414174f",
     "yarnVersion": "1.22.19",
-    "npmVersion": "8.12.2",
+    "npmVersion": "8.19.1",
     "pm2Version": "5.2.0",
-    "file": "../output/ubuntu/18.4/Dockerfile"
+    "file": "../output/ubuntu/18.8/Dockerfile"
   },
   {
     "distro": "debian",
-    "nodeVersion": "14.19.3",
+    "nodeVersion": "14.20.0",
     "alpineVersion": 3.12,
     "alpineSha256": "74e5ad84a67e9b8ed7609b32dc2460b76175020923d7f494a73a851446222d18",
     "ubuntuVersion": "focal",
@@ -93,13 +93,13 @@
     "debianVersion": "stable-slim",
     "debianSha256": "3ecce669b6be99312305bc3acc90f91232880c68b566f257ae66647e9414174f",
     "yarnVersion": "1.22.19",
-    "npmVersion": "8.12.2",
+    "npmVersion": "8.19.1",
     "pm2Version": "5.2.0",
-    "file": "../output/debian/14.19/Dockerfile"
+    "file": "../output/debian/14.20/Dockerfile"
   },
   {
     "distro": "debian",
-    "nodeVersion": "16.15.1",
+    "nodeVersion": "16.17.0",
     "alpineVersion": 3.12,
     "alpineSha256": "74e5ad84a67e9b8ed7609b32dc2460b76175020923d7f494a73a851446222d18",
     "ubuntuVersion": "focal",
@@ -107,13 +107,13 @@
     "debianVersion": "stable-slim",
     "debianSha256": "3ecce669b6be99312305bc3acc90f91232880c68b566f257ae66647e9414174f",
     "yarnVersion": "1.22.19",
-    "npmVersion": "8.12.2",
+    "npmVersion": "8.19.1",
     "pm2Version": "5.2.0",
-    "file": "../output/debian/16.15/Dockerfile"
+    "file": "../output/debian/16.17/Dockerfile"
   },
   {
     "distro": "debian",
-    "nodeVersion": "18.4.0",
+    "nodeVersion": "18.8.0",
     "alpineVersion": 3.12,
     "alpineSha256": "74e5ad84a67e9b8ed7609b32dc2460b76175020923d7f494a73a851446222d18",
     "ubuntuVersion": "focal",
@@ -121,8 +121,8 @@
     "debianVersion": "stable-slim",
     "debianSha256": "3ecce669b6be99312305bc3acc90f91232880c68b566f257ae66647e9414174f",
     "yarnVersion": "1.22.19",
-    "npmVersion": "8.12.2",
+    "npmVersion": "8.19.1",
     "pm2Version": "5.2.0",
-    "file": "../output/debian/18.4/Dockerfile"
+    "file": "../output/debian/18.8/Dockerfile"
   }
 ]
