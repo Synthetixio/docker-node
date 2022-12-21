@@ -14,9 +14,6 @@ ENV DEBIAN_FRONTEND noninteractive
 ENV DEBCONF_NONINTERACTIVE_SEEN true
 # good colors for most applications
 ENV TERM xterm
-# required for patch-package on heroku
-ENV NPM_CONFIG_PRODUCTION false
-ENV YARN_PRODUCTION false
 
 ############### INSTALL DEPS ###############
 RUN apk add --no-cache \
@@ -64,15 +61,14 @@ RUN ARCH= && alpineArch="$(apk --print-arch)" \
     && case "${alpineArch##*-}" in \
     x86_64) \
     ARCH='x64' \
-    CHECKSUM="6c96fdd6438cb919f4861419b632165697aabb1233d8da6cf3f7886b221416bf" \
     ;; \
     *) ;; \
     esac \
     && if [ -n "${CHECKSUM}" ]; then \
     set -eu; \
-    curl -fsSLO --compressed "https://unofficial-builds.nodejs.org/download/release/v14.20.0/node-v14.20.0-linux-$ARCH-musl.tar.xz"; \
-    echo "$CHECKSUM  node-v14.20.0-linux-$ARCH-musl.tar.xz" | sha256sum -c - \
-    && tar -xJf "node-v14.20.0-linux-$ARCH-musl.tar.xz" -C /usr/local --strip-components=1 --no-same-owner \
+    curl -fsSLO --compressed "https://unofficial-builds.nodejs.org/download/release/v14.21.2/node-v14.21.2-linux-$ARCH-musl.tar.xz"; \
+    echo "$CHECKSUM  node-v14.21.2-linux-$ARCH-musl.tar.xz" | sha256sum -c - \
+    && tar -xJf "node-v14.21.2-linux-$ARCH-musl.tar.xz" -C /usr/local --strip-components=1 --no-same-owner \
     && ln -s /usr/local/bin/node /usr/local/bin/nodejs; \
     else \
     echo "Building from source" \
@@ -94,20 +90,20 @@ RUN ARCH= && alpineArch="$(apk --print-arch)" \
     gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys "$key" || \
     gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "$key" ; \
     done \
-    && curl -fsSLO --compressed "https://nodejs.org/dist/v14.20.0/node-v14.20.0.tar.xz" \
-    && curl -fsSLO --compressed "https://nodejs.org/dist/v14.20.0/SHASUMS256.txt.asc" \
+    && curl -fsSLO --compressed "https://nodejs.org/dist/v14.21.2/node-v14.21.2.tar.xz" \
+    && curl -fsSLO --compressed "https://nodejs.org/dist/v14.21.2/SHASUMS256.txt.asc" \
     && gpg --batch --decrypt --output SHASUMS256.txt SHASUMS256.txt.asc \
-    && grep " node-v14.20.0.tar.xz\$" SHASUMS256.txt | sha256sum -c - \
-    && tar -xf "node-v14.20.0.tar.xz" \
-    && cd "node-v14.20.0" \
+    && grep " node-v14.21.2.tar.xz\$" SHASUMS256.txt | sha256sum -c - \
+    && tar -xf "node-v14.21.2.tar.xz" \
+    && cd "node-v14.21.2" \
     && ./configure \
     && make -j$(getconf _NPROCESSORS_ONLN) V= \
     && make install \
     && cd .. \
-    && rm -Rf "node-v14.20.0" \
-    && rm "node-v14.20.0.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt; \
+    && rm -Rf "node-v14.21.2" \
+    && rm "node-v14.21.2.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt; \
     fi \
-    && rm -f "node-v14.20.0-linux-$ARCH-musl.tar.xz"
+    && rm -f "node-v14.21.2-linux-$ARCH-musl.tar.xz"
 
 # avoid million NPM install messages
 ENV npm_config_loglevel warn
@@ -116,7 +112,7 @@ ENV npm_config_loglevel warn
 ENV npm_config_unsafe_perm true
 
 # install latest npm, regardless of node version, for speed and fixes
-RUN npm install -g npm@8.19.1
+RUN npm install -g npm@9.2.0
 
 RUN node --version \
     && npm --version
@@ -143,7 +139,10 @@ RUN set -ex \
 RUN yarn --version
 
 # pm2 setup
-RUN npm install -g pm2@5.2.0
+RUN npm install -g pm2@5.2.2
+
+# trunk setup
+RUN curl https://get.trunk.io -fsSL | bash
 
 ############### WRAPPING UP ###############
 COPY docker-entrypoint.sh /usr/local/bin/
