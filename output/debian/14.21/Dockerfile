@@ -136,6 +136,9 @@ RUN yarn --version
 # pm2 setup
 RUN npm install -g pm2@5.2.2
 
+# trunk setup
+RUN npm install -g @trunkio/launcher@1.2.3
+
 ############### WRAPPING UP ###############
 COPY docker-entrypoint.sh /usr/local/bin/
 ENTRYPOINT ["docker-entrypoint.sh"]
