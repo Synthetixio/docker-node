@@ -136,9 +136,6 @@ RUN yarn --version
 # pm2 setup
 RUN npm install -g pm2@5.2.2
 
-# trunk setup
-RUN curl https://get.trunk.io -fsSL | bash
-
 ############### WRAPPING UP ###############
 COPY docker-entrypoint.sh /usr/local/bin/
 ENTRYPOINT ["docker-entrypoint.sh"]
