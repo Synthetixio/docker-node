@@ -9,5 +9,6 @@
   "debianSha256": "3ecce669b6be99312305bc3acc90f91232880c68b566f257ae66647e9414174f",
   "yarnVersion": "1.22.19",
   "npmVersion": "9.2.0",
-  "pm2Version": "5.2.2"
+  "pm2Version": "5.2.2",
+  "trunkVersion": "1.2.3"
 }
