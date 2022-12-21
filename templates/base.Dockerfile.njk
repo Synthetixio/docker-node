@@ -19,9 +19,6 @@ ENV DEBIAN_FRONTEND noninteractive
 ENV DEBCONF_NONINTERACTIVE_SEEN true
 # good colors for most applications
 ENV TERM xterm
-# required for patch-package on heroku
-ENV NPM_CONFIG_PRODUCTION false
-ENV YARN_PRODUCTION false
 
 ############### INSTALL DEPS ###############
 {%- if distro === "alpine" %}
@@ -228,6 +225,9 @@ RUN yarn --version
 
 # pm2 setup
 RUN npm install -g pm2@{{ pm2Version }}
+
+# trunk setup
+RUN curl https://get.trunk.io -fsSL | bash
 
 ############### WRAPPING UP ###############
 COPY docker-entrypoint.sh /usr/local/bin/
