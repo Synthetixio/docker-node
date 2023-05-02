@@ -1,5 +1,5 @@
 
-FROM ubuntu:jammy@sha256:965fbcae990b0467ed5657caceaec165018ef44a4d2d46c7cdea80a9dff0d1ea
+FROM ubuntu:jammy@sha256:7a57c69fe1e9d5b97c5fe649849e79f2cfc3bf11d10bbd5218b4eb61716aebe6
 
 ############### ENV SETUP ###############
 # husky workaround - https://github.com/typicode/husky/issues/821
@@ -89,12 +89,12 @@ RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
     gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys "$key" || \
     gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "$key" ; \
     done \
-    && curl -fsSLO --compressed "https://nodejs.org/dist/v18.13.0/node-v18.13.0-linux-$ARCH.tar.xz" \
-    && curl -fsSLO --compressed "https://nodejs.org/dist/v18.13.0/SHASUMS256.txt.asc" \
+    && curl -fsSLO --compressed "https://nodejs.org/dist/v18.16.0/node-v18.16.0-linux-$ARCH.tar.xz" \
+    && curl -fsSLO --compressed "https://nodejs.org/dist/v18.16.0/SHASUMS256.txt.asc" \
     && gpg --batch --decrypt --output SHASUMS256.txt SHASUMS256.txt.asc \
-    && grep " node-v18.13.0-linux-$ARCH.tar.xz\$" SHASUMS256.txt | sha256sum -c - \
-    && tar -xJf "node-v18.13.0-linux-$ARCH.tar.xz" -C /usr/local --strip-components=1 --no-same-owner \
-    && rm "node-v18.13.0-linux-$ARCH.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt \
+    && grep " node-v18.16.0-linux-$ARCH.tar.xz\$" SHASUMS256.txt | sha256sum -c - \
+    && tar -xJf "node-v18.16.0-linux-$ARCH.tar.xz" -C /usr/local --strip-components=1 --no-same-owner \
+    && rm "node-v18.16.0-linux-$ARCH.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt \
     && ln -s /usr/local/bin/node /usr/local/bin/nodejs
 
 # avoid million NPM install messages
@@ -104,7 +104,7 @@ ENV npm_config_loglevel warn
 ENV npm_config_unsafe_perm true
 
 # install latest npm, regardless of node version, for speed and fixes
-RUN npm install -g npm@9.4.0
+RUN npm install -g npm@9.6.5
 
 RUN node --version \
     && npm --version
@@ -131,10 +131,16 @@ RUN set -ex \
 RUN yarn --version
 
 # pm2 setup
-RUN npm install -g pm2@5.2.2
+RUN npm install -g pm2@5.3.0
 
 # trunk setup
-RUN npm install -g @trunkio/launcher@1.2.3
+RUN npm install -g @trunkio/launcher@1.2.4
+
+# pnpm setup
+RUN npm install -g pnpm@8.4.0
+
+# turbo setup
+RUN npm install -g turbo@1.9.3
 
 ############### WRAPPING UP ###############
 COPY docker-entrypoint.sh /usr/local/bin/

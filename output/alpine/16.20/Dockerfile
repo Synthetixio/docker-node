@@ -61,15 +61,15 @@ RUN ARCH= && alpineArch="$(apk --print-arch)" \
     && case "${alpineArch##*-}" in \
     x86_64) \
     ARCH='x64' \
-    CHECKSUM="96973d2cf66fd5c1b0a02b9eeaa248b8e8a29e93cfc79d73fb99c396ec41eac7" \
+    CHECKSUM="b3f80fe7d0f1af6fe25ffedc7237ca519965d08fc800eab29cf45cd5b90cdb26" \
     ;; \
     *) ;; \
     esac \
     && if [ -n "${CHECKSUM}" ]; then \
     set -eu; \
-    curl -fsSLO --compressed "https://unofficial-builds.nodejs.org/download/release/v18.13.0/node-v18.13.0-linux-$ARCH-musl.tar.xz"; \
-    echo "$CHECKSUM  node-v18.13.0-linux-$ARCH-musl.tar.xz" | sha256sum -c - \
-    && tar -xJf "node-v18.13.0-linux-$ARCH-musl.tar.xz" -C /usr/local --strip-components=1 --no-same-owner \
+    curl -fsSLO --compressed "https://unofficial-builds.nodejs.org/download/release/v16.20.0/node-v16.20.0-linux-$ARCH-musl.tar.xz"; \
+    echo "$CHECKSUM  node-v16.20.0-linux-$ARCH-musl.tar.xz" | sha256sum -c - \
+    && tar -xJf "node-v16.20.0-linux-$ARCH-musl.tar.xz" -C /usr/local --strip-components=1 --no-same-owner \
     && ln -s /usr/local/bin/node /usr/local/bin/nodejs; \
     else \
     echo "Building from source" \
@@ -87,20 +87,20 @@ RUN ARCH= && alpineArch="$(apk --print-arch)" \
     gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys "$key" || \
     gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "$key" ; \
     done \
-    && curl -fsSLO --compressed "https://nodejs.org/dist/v18.13.0/node-v18.13.0.tar.xz" \
-    && curl -fsSLO --compressed "https://nodejs.org/dist/v18.13.0/SHASUMS256.txt.asc" \
+    && curl -fsSLO --compressed "https://nodejs.org/dist/v16.20.0/node-v16.20.0.tar.xz" \
+    && curl -fsSLO --compressed "https://nodejs.org/dist/v16.20.0/SHASUMS256.txt.asc" \
     && gpg --batch --decrypt --output SHASUMS256.txt SHASUMS256.txt.asc \
-    && grep " node-v18.13.0.tar.xz\$" SHASUMS256.txt | sha256sum -c - \
-    && tar -xf "node-v18.13.0.tar.xz" \
-    && cd "node-v18.13.0" \
+    && grep " node-v16.20.0.tar.xz\$" SHASUMS256.txt | sha256sum -c - \
+    && tar -xf "node-v16.20.0.tar.xz" \
+    && cd "node-v16.20.0" \
     && ./configure \
     && make -j$(getconf _NPROCESSORS_ONLN) V= \
     && make install \
     && cd .. \
-    && rm -Rf "node-v18.13.0" \
-    && rm "node-v18.13.0.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt; \
+    && rm -Rf "node-v16.20.0" \
+    && rm "node-v16.20.0.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt; \
     fi \
-    && rm -f "node-v18.13.0-linux-$ARCH-musl.tar.xz"
+    && rm -f "node-v16.20.0-linux-$ARCH-musl.tar.xz"
 
 # avoid million NPM install messages
 ENV npm_config_loglevel warn
@@ -109,7 +109,7 @@ ENV npm_config_loglevel warn
 ENV npm_config_unsafe_perm true
 
 # install latest npm, regardless of node version, for speed and fixes
-RUN npm install -g npm@9.4.0
+RUN npm install -g npm@9.6.5
 
 RUN node --version \
     && npm --version
@@ -136,10 +136,16 @@ RUN set -ex \
 RUN yarn --version
 
 # pm2 setup
-RUN npm install -g pm2@5.2.2
+RUN npm install -g pm2@5.3.0
 
 # trunk setup
-RUN npm install -g @trunkio/launcher@1.2.3
+RUN npm install -g @trunkio/launcher@1.2.4
+
+# pnpm setup
+RUN npm install -g pnpm@8.4.0
+
+# turbo setup
+RUN npm install -g turbo@1.9.3
 
 ############### WRAPPING UP ###############
 COPY docker-entrypoint.sh /usr/local/bin/
