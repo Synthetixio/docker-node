@@ -10,5 +10,7 @@
   "yarnVersion": "1.22.19",
   "npmVersion": "9.4.0",
   "pm2Version": "5.2.2",
-  "trunkVersion": "1.2.3"
+  "trunkVersion": "1.2.3",
+  "pnpmVersion": "8.4.0",
+  "turboVersion": "1.9.3"
 }
