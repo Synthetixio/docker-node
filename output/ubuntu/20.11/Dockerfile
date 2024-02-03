@@ -23,6 +23,7 @@ RUN apt-get update && \
     python3-distutils \
     python3-apt \
     python3-dev \
+    python3-pip \
     build-essential \
     openssh-server \
     # mozjpeg dependencies
@@ -50,10 +51,6 @@ RUN apt-get update && \
 RUN localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8
 ENV LANG en_US.utf8
 
-############### PYTHON SETUP ###############
-# install pip
-RUN curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
-RUN python3 get-pip.py
 # add local python dir to path
 ENV PATH $PATH:/root/.local/bin
 
