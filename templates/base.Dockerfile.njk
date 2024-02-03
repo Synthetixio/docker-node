@@ -97,12 +97,12 @@ RUN ARCH= && alpineArch="$(apk --print-arch)" \
     && case "${alpineArch##*-}" in \
     x86_64) \
     ARCH='x64' \
-{%- if nodeVersion === "16.20.0" %}
-    CHECKSUM="b3f80fe7d0f1af6fe25ffedc7237ca519965d08fc800eab29cf45cd5b90cdb26" \
-{%- elif nodeVersion === "18.16.0" %}
-    CHECKSUM="d093ef223708a6702db1dc591911f3b23481cb55a337df3adf80b6effaba90b2" \
-{%- elif nodeVersion === "20.0.0" %}
-    CHECKSUM="8a637ef2fbac8c50b08129b8cbd80a8175a3d6c8b06615de100170d795af8668" \
+{%- if nodeVersion === "16.20.2" %}
+    CHECKSUM="d2df78a192bd78b958e19a77821916a38def5e9e46c0c9a0989fdf5eb6c14a7e" \
+{%- elif nodeVersion === "18.19.0" %}
+    CHECKSUM="10b7b23b6b867a25f060a433b83f5c3ecb3bcf7cdba1c0ce46443065a832fd41" \
+{%- elif nodeVersion === "20.11.0" %}
+    CHECKSUM="a8bec39586538896715be7a2ca7ef08727a58ad94d25876c5db11cafacff4c37" \
 {%- endif %}
     ;; \
     *) ;; \
@@ -218,9 +218,6 @@ RUN yarn --version
 
 # pm2 setup
 RUN npm install -g pm2@{{ pm2Version }}
-
-# trunk setup
-RUN npm install -g @trunkio/launcher@{{ trunkVersion }}
 
 # pnpm setup
 RUN npm install -g pnpm@{{ pnpmVersion }}
