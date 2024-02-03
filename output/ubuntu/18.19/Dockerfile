@@ -114,6 +114,7 @@ RUN npm config set save-exact=true
 
 ############### YARN SETUP ###############
 RUN set -ex \
+    && export GNUPGHOME="$(mktemp -d)" \
     && for key in \
     6A010C5166006599AA17F08146C2130DFD2497F5 \
     ; do \
@@ -123,6 +124,8 @@ RUN set -ex \
     && curl -fsSLO --compressed "https://yarnpkg.com/downloads/1.22.21/yarn-v1.22.21.tar.gz" \
     && curl -fsSLO --compressed "https://yarnpkg.com/downloads/1.22.21/yarn-v1.22.21.tar.gz.asc" \
     && gpg --batch --verify yarn-v1.22.21.tar.gz.asc yarn-v1.22.21.tar.gz \
+    && gpgconf --kill all \
+    && rm -rf "$GNUPGHOME" \
     && mkdir -p /opt \
     && tar -xzf yarn-v1.22.21.tar.gz -C /opt/ \
     && ln -s /opt/yarn-v1.22.21/bin/yarn /usr/local/bin/yarn \
