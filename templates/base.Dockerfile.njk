@@ -97,9 +97,7 @@ RUN ARCH= && alpineArch="$(apk --print-arch)" \
     && case "${alpineArch##*-}" in \
     x86_64) \
     ARCH='x64' \
-{%- if nodeVersion === "16.20.2" %}
-    CHECKSUM="d2df78a192bd78b958e19a77821916a38def5e9e46c0c9a0989fdf5eb6c14a7e" \
-{%- elif nodeVersion === "18.19.0" %}
+{%- if nodeVersion === "18.19.0" %}
     CHECKSUM="10b7b23b6b867a25f060a433b83f5c3ecb3bcf7cdba1c0ce46443065a832fd41" \
 {%- elif nodeVersion === "20.11.0" %}
     CHECKSUM="a8bec39586538896715be7a2ca7ef08727a58ad94d25876c5db11cafacff4c37" \

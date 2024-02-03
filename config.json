@@ -1,6 +1,6 @@
 {
   "distro": ["alpine", "ubuntu", "debian"],
-  "nodeVersion": ["16.20.2", "18.19.0", "20.11.0"],
+  "nodeVersion": ["18.19.0", "20.11.0"],
   "alpineVersion": 3.12,
   "alpineSha256": "74e5ad84a67e9b8ed7609b32dc2460b76175020923d7f494a73a851446222d18",
   "ubuntuVersion": "jammy",
