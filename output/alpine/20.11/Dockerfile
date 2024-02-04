@@ -106,8 +106,7 @@ RUN ARCH= && alpineArch="$(apk --print-arch)" \
     && rm -Rf "node-v20.11.0" \
     && rm "node-v20.11.0.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt; \
     fi \
-    && rm -f "node-v20.11.0-linux-$ARCH-musl.tar.xz" \
-    && find /usr/local/include/node/openssl/archs -mindepth 1 -maxdepth 1 ! -name "$OPENSSL_ARCH" -exec rm -rf {} \;
+    && rm -f "node-v20.11.0-linux-$ARCH-musl.tar.xz"
 
 # avoid million NPM install messages
 ENV npm_config_loglevel warn
