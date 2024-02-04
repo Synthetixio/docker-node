@@ -14,6 +14,8 @@ ENV DEBIAN_FRONTEND noninteractive
 ENV DEBCONF_NONINTERACTIVE_SEEN true
 # good colors for most applications
 ENV TERM xterm
+# allow py3 packages to be installed globally
+ENV PIP_BREAK_SYSTEM_PACKAGES 1
 
 ############### INSTALL DEPS ###############
 RUN apk add --no-cache \

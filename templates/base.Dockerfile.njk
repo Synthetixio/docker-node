@@ -19,6 +19,8 @@ ENV DEBIAN_FRONTEND noninteractive
 ENV DEBCONF_NONINTERACTIVE_SEEN true
 # good colors for most applications
 ENV TERM xterm
+# allow py3 packages to be installed globally
+ENV PIP_BREAK_SYSTEM_PACKAGES 1
 
 ############### INSTALL DEPS ###############
 {%- if distro === "alpine" %}
@@ -80,8 +82,6 @@ RUN localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8
 ENV LANG en_US.utf8
 
 ############### PYTHON3 SETUP ###############
-# omit externally managed error in py3
-RUN rm /usr/lib/python3.11/EXTERNALLY-MANAGED
 # add local python dir to path
 ENV PATH $PATH:/root/.local/bin
 {%- endif %}
