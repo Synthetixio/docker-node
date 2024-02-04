@@ -73,6 +73,7 @@ RUN ARCH= && alpineArch="$(apk --print-arch)" \
     && ln -s /usr/local/bin/node /usr/local/bin/nodejs; \
     else \
     echo "Building from source" \
+    && export GNUPGHOME="$(mktemp -d)" 
     # gpg keys listed at https://github.com/nodejs/node#release-keys
     && for key in \
     4ED778F539E3634C779C87C6D7062848A1AB005C \
@@ -93,6 +94,8 @@ RUN ARCH= && alpineArch="$(apk --print-arch)" \
     && curl -fsSLO --compressed "https://nodejs.org/dist/v20.11.0/node-v20.11.0.tar.xz" \
     && curl -fsSLO --compressed "https://nodejs.org/dist/v20.11.0/SHASUMS256.txt.asc" \
     && gpg --batch --decrypt --output SHASUMS256.txt SHASUMS256.txt.asc \
+    && gpgconf --kill all \
+    && rm -rf "$GNUPGHOME" \
     && grep " node-v20.11.0.tar.xz\$" SHASUMS256.txt | sha256sum -c - \
     && tar -xf "node-v20.11.0.tar.xz" \
     && cd "node-v20.11.0" \
@@ -103,7 +106,8 @@ RUN ARCH= && alpineArch="$(apk --print-arch)" \
     && rm -Rf "node-v20.11.0" \
     && rm "node-v20.11.0.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt; \
     fi \
-    && rm -f "node-v20.11.0-linux-$ARCH-musl.tar.xz"
+    && rm -f "node-v20.11.0-linux-$ARCH-musl.tar.xz" \
+    && find /usr/local/include/node/openssl/archs -mindepth 1 -maxdepth 1 ! -name "$OPENSSL_ARCH" -exec rm -rf {} \;
 
 # avoid million NPM install messages
 ENV npm_config_loglevel warn
