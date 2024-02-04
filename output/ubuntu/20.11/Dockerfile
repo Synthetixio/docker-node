@@ -51,6 +51,9 @@ RUN apt-get update && \
 RUN localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8
 ENV LANG en_US.utf8
 
+############### PYTHON3 SETUP ###############
+# omit externally managed error in py3
+RUN rm /usr/lib/python3.11/EXTERNALLY-MANAGED
 # add local python dir to path
 ENV PATH $PATH:/root/.local/bin
 
