@@ -110,7 +110,7 @@ RUN ARCH= && alpineArch="$(apk --print-arch)" \
     && ln -s /usr/local/bin/node /usr/local/bin/nodejs; \
     else \
     echo "Building from source" \
-    && export GNUPGHOME="$(mktemp -d)" 
+    && export GNUPGHOME="$(mktemp -d)" \
     # gpg keys listed at https://github.com/nodejs/node#release-keys
     && for key in \
     4ED778F539E3634C779C87C6D7062848A1AB005C \
@@ -143,7 +143,8 @@ RUN ARCH= && alpineArch="$(apk --print-arch)" \
     && rm -Rf "node-v{{ nodeVersion }}" \
     && rm "node-v{{ nodeVersion }}.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt; \
     fi \
-    && rm -f "node-v{{ nodeVersion }}-linux-$ARCH-musl.tar.xz"
+    && rm -f "node-v{{ nodeVersion }}-linux-$ARCH-musl.tar.xz" \
+    && find /usr/local/include/node/openssl/archs -mindepth 1 -maxdepth 1 ! -name "$OPENSSL_ARCH" -exec rm -rf {} \;
 {%- elif distro === "ubuntu" or distro === "debian" %}
 RUN groupadd --gid 1000 node \
     && useradd --uid 1000 --gid node --shell /bin/bash --create-home node
