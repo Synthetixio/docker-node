@@ -1,5 +1,5 @@
 
-FROM ubuntu:jammy@sha256:bcc511d82482900604524a8e8d64bf4c53b2461868dac55f4d04d660e61983cb
+FROM alpine:3.12@sha256:74e5ad84a67e9b8ed7609b32dc2460b76175020923d7f494a73a851446222d18
 
 ############### ENV SETUP ###############
 # husky workaround - https://github.com/typicode/husky/issues/821
@@ -18,17 +18,20 @@ ENV TERM xterm
 ENV PIP_BREAK_SYSTEM_PACKAGES 1
 
 ############### INSTALL DEPS ###############
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-    locales \
-    software-properties-common \
-    python3-distutils \
-    python3-apt \
-    python3-dev \
-    python3-pip \
-    build-essential \
-    openssh-server \
+RUN apk add --no-cache \
+    libstdc++ \
+    py3-pip \
+    py3-setuptools \
+    libgcc \
+    linux-headers \
+    tar \
     # mozjpeg dependencies
+    tiff \
+    jpeg \
+    zlib \
+    zlib-dev \
+    coreutils \
+    openssh \
     autoconf \
     automake \
     libtool \
@@ -48,34 +51,32 @@ RUN apt-get update && \
     wget \
     binutils-gold \
     gnupg \
-    && rm -rf /var/lib/apt/lists/* /var/cache/apt/*
-# locale setup
-RUN localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8
-ENV LANG en_US.utf8
-
-############### PYTHON3 SETUP ###############
-# add local python dir to path
-ENV PATH $PATH:/root/.local/bin
+    && echo "Finished installing packages"
 
 ############### NODE SETUP ###############
 # create new node user
-RUN groupadd --gid 1000 node \
-    && useradd --uid 1000 --gid node --shell /bin/bash --create-home node
+RUN addgroup -g 1000 node \
+    && adduser -u 1000 -G node -s /bin/sh -D node
 
 # node setup
-RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
-    && case "${dpkgArch##*-}" in \
-    amd64) ARCH='x64';; \
-    ppc64el) ARCH='ppc64le';; \
-    s390x) ARCH='s390x';; \
-    arm64) ARCH='arm64';; \
-    armhf) ARCH='armv7l';; \
-    i386) ARCH='x86';; \
-    *) echo "unsupported architecture"; exit 1 ;; \
+RUN ARCH= && alpineArch="$(apk --print-arch)" \
+    && case "${alpineArch##*-}" in \
+    x86_64) \
+    ARCH='x64' \
+    CHECKSUM="61729a4b4adfefb48ed87034dbaff9129e1fd5b9396434708b0897217a6bf302" \
+    ;; \
+    *) ;; \
     esac \
+    && if [ -n "${CHECKSUM}" ]; then \
+    set -eu; \
+    curl -fsSLO --compressed "https://unofficial-builds.nodejs.org/download/release/v20.12.2/node-v20.12.2-linux-$ARCH-musl.tar.xz"; \
+    echo "$CHECKSUM  node-v20.12.2-linux-$ARCH-musl.tar.xz" | sha256sum -c - \
+    && tar -xJf "node-v20.12.2-linux-$ARCH-musl.tar.xz" -C /usr/local --strip-components=1 --no-same-owner \
+    && ln -s /usr/local/bin/node /usr/local/bin/nodejs; \
+    else \
+    echo "Building from source" \
     && export GNUPGHOME="$(mktemp -d)" \
     # gpg keys listed at https://github.com/nodejs/node#release-keys
-    && set -ex \
     && for key in \
     4ED778F539E3634C779C87C6D7062848A1AB005C \
     141F07595B7B3FFE74309A937405533BE57C7D57 \
@@ -88,19 +89,27 @@ RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
     C82FA3AE1CBEDC6BE46B9360C43CEC45C17AB93C \
     108F52B48DB57BB0CC439B2997B01419BD92F80A \
     A363A499291CBBC940DD62E41F10027AF002F8B0 \
+    CC68F5A3106FF448322E48ED27F5E38D5B0A215F \
     ; do \
     gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys "$key" || \
     gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "$key" ; \
     done \
-    && curl -fsSLO --compressed "https://nodejs.org/dist/v20.11.0/node-v20.11.0-linux-$ARCH.tar.xz" \
-    && curl -fsSLO --compressed "https://nodejs.org/dist/v20.11.0/SHASUMS256.txt.asc" \
+    && curl -fsSLO --compressed "https://nodejs.org/dist/v20.12.2/node-v20.12.2.tar.xz" \
+    && curl -fsSLO --compressed "https://nodejs.org/dist/v20.12.2/SHASUMS256.txt.asc" \
     && gpg --batch --decrypt --output SHASUMS256.txt SHASUMS256.txt.asc \
     && gpgconf --kill all \
     && rm -rf "$GNUPGHOME" \
-    && grep " node-v20.11.0-linux-$ARCH.tar.xz\$" SHASUMS256.txt | sha256sum -c - \
-    && tar -xJf "node-v20.11.0-linux-$ARCH.tar.xz" -C /usr/local --strip-components=1 --no-same-owner \
-    && rm "node-v20.11.0-linux-$ARCH.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt \
-    && ln -s /usr/local/bin/node /usr/local/bin/nodejs
+    && grep " node-v20.12.2.tar.xz\$" SHASUMS256.txt | sha256sum -c - \
+    && tar -xf "node-v20.12.2.tar.xz" \
+    && cd "node-v20.12.2" \
+    && ./configure \
+    && make -j$(getconf _NPROCESSORS_ONLN) V= \
+    && make install \
+    && cd .. \
+    && rm -Rf "node-v20.12.2" \
+    && rm "node-v20.12.2.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt; \
+    fi \
+    && rm -f "node-v20.12.2-linux-$ARCH-musl.tar.xz"
 
 # avoid million NPM install messages
 ENV npm_config_loglevel warn
@@ -109,7 +118,7 @@ ENV npm_config_loglevel warn
 ENV npm_config_unsafe_perm true
 
 # install latest npm, regardless of node version, for speed and fixes
-RUN npm install -g npm@10.4.0
+RUN npm install -g npm@10.5.2
 
 RUN node --version \
     && npm --version
@@ -126,26 +135,26 @@ RUN set -ex \
     gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys "$key" || \
     gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "$key" ; \
     done \
-    && curl -fsSLO --compressed "https://yarnpkg.com/downloads/1.22.19/yarn-v1.22.19.tar.gz" \
-    && curl -fsSLO --compressed "https://yarnpkg.com/downloads/1.22.19/yarn-v1.22.19.tar.gz.asc" \
-    && gpg --batch --verify yarn-v1.22.19.tar.gz.asc yarn-v1.22.19.tar.gz \
+    && curl -fsSLO --compressed "https://yarnpkg.com/downloads/1.22.22/yarn-v1.22.22.tar.gz" \
+    && curl -fsSLO --compressed "https://yarnpkg.com/downloads/1.22.22/yarn-v1.22.22.tar.gz.asc" \
+    && gpg --batch --verify yarn-v1.22.22.tar.gz.asc yarn-v1.22.22.tar.gz \
     && gpgconf --kill all \
     && rm -rf "$GNUPGHOME" \
     && mkdir -p /opt \
-    && tar -xzf yarn-v1.22.19.tar.gz -C /opt/ \
-    && ln -s /opt/yarn-v1.22.19/bin/yarn /usr/local/bin/yarn \
-    && ln -s /opt/yarn-v1.22.19/bin/yarnpkg /usr/local/bin/yarnpkg \
-    && rm yarn-v1.22.19.tar.gz.asc yarn-v1.22.19.tar.gz
+    && tar -xzf yarn-v1.22.22.tar.gz -C /opt/ \
+    && ln -s /opt/yarn-v1.22.22/bin/yarn /usr/local/bin/yarn \
+    && ln -s /opt/yarn-v1.22.22/bin/yarnpkg /usr/local/bin/yarnpkg \
+    && rm yarn-v1.22.22.tar.gz.asc yarn-v1.22.22.tar.gz
 RUN yarn --version
 
 # pm2 setup
 RUN npm install -g pm2@5.3.1
 
 # pnpm setup
-RUN npm install -g pnpm@8.15.1
+RUN npm install -g pnpm@9.0.4
 
 # turbo setup
-RUN npm install -g turbo@1.12.2
+RUN npm install -g turbo@1.13.2
 
 ############### WRAPPING UP ###############
 COPY docker-entrypoint.sh /usr/local/bin/
