@@ -34,13 +34,13 @@ jobs:
             node-${{ runner.os }}-${{ matrix.node }}-${{ matrix.distro }}-buildx-
 
       - name: Login to DockerHub
-        uses: docker/login-action@465a07811f14bebb1938fbed4728c6a1ff8901fc # pin@v1
+        uses: docker/login-action@e92390c5fb421da1463c202d546fed0ec5c39f20 # pin@v1
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Login to GitHub Container Registry
-        uses: docker/login-action@465a07811f14bebb1938fbed4728c6a1ff8901fc # pin@v1
+        uses: docker/login-action@e92390c5fb421da1463c202d546fed0ec5c39f20 # pin@v1
         with:
           registry: ghcr.io
           username: synthetixio
