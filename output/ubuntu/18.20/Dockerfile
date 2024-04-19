@@ -126,16 +126,16 @@ RUN set -ex \
     gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys "$key" || \
     gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "$key" ; \
     done \
-    && curl -fsSLO --compressed "https://yarnpkg.com/downloads/1.22.22/yarn-v1.22.22.tar.gz" \
-    && curl -fsSLO --compressed "https://yarnpkg.com/downloads/1.22.22/yarn-v1.22.22.tar.gz.asc" \
-    && gpg --batch --verify yarn-v1.22.22.tar.gz.asc yarn-v1.22.22.tar.gz \
+    && curl -fsSLO --compressed "https://yarnpkg.com/downloads/1.22.19/yarn-v1.22.19.tar.gz" \
+    && curl -fsSLO --compressed "https://yarnpkg.com/downloads/1.22.19/yarn-v1.22.19.tar.gz.asc" \
+    && gpg --batch --verify yarn-v1.22.19.tar.gz.asc yarn-v1.22.19.tar.gz \
     && gpgconf --kill all \
     && rm -rf "$GNUPGHOME" \
     && mkdir -p /opt \
-    && tar -xzf yarn-v1.22.22.tar.gz -C /opt/ \
-    && ln -s /opt/yarn-v1.22.22/bin/yarn /usr/local/bin/yarn \
-    && ln -s /opt/yarn-v1.22.22/bin/yarnpkg /usr/local/bin/yarnpkg \
-    && rm yarn-v1.22.22.tar.gz.asc yarn-v1.22.22.tar.gz
+    && tar -xzf yarn-v1.22.19.tar.gz -C /opt/ \
+    && ln -s /opt/yarn-v1.22.19/bin/yarn /usr/local/bin/yarn \
+    && ln -s /opt/yarn-v1.22.19/bin/yarnpkg /usr/local/bin/yarnpkg \
+    && rm yarn-v1.22.19.tar.gz.asc yarn-v1.22.19.tar.gz
 RUN yarn --version
 
 # pm2 setup
